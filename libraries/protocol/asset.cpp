@@ -62,14 +62,14 @@ namespace graphene { namespace protocol {
          {
             FC_ASSERT( b.base.amount.value > 0 );
             uint128_t result = (uint128_t(a.amount.value) * b.quote.amount.value)/b.base.amount.value;
-            FC_ASSERT( result <= GRAPHENE_MAX_SHARE_SUPPLY );
+            FC_ASSERT( result <= GRAPHENE_INITIAL_MAX_SHARE_SUPPLY );
             return asset( static_cast<int64_t>(result), b.quote.asset_id );
          }
          else if( a.asset_id == b.quote.asset_id )
          {
             FC_ASSERT( b.quote.amount.value > 0 );
             uint128_t result = (uint128_t(a.amount.value) * b.base.amount.value)/b.quote.amount.value;
-            FC_ASSERT( result <= GRAPHENE_MAX_SHARE_SUPPLY );
+            FC_ASSERT( result <= GRAPHENE_INITIAL_MAX_SHARE_SUPPLY );
             return asset( static_cast<int64_t>(result), b.base.asset_id );
          }
          FC_THROW_EXCEPTION( fc::assert_exception, "invalid asset * price", ("asset",a)("price",b) );
@@ -82,14 +82,14 @@ namespace graphene { namespace protocol {
          {
             FC_ASSERT( b.base.amount.value > 0 );
             uint128_t result = (uint128_t(a.amount.value) * b.quote.amount.value + b.base.amount.value - 1)/b.base.amount.value;
-            FC_ASSERT( result <= GRAPHENE_MAX_SHARE_SUPPLY );
+            FC_ASSERT( result <= GRAPHENE_INITIAL_MAX_SHARE_SUPPLY );
             return asset( static_cast<int64_t>(result), b.quote.asset_id );
          }
          else if( a.asset_id == b.quote.asset_id )
          {
             FC_ASSERT( b.quote.amount.value > 0 );
             uint128_t result = (uint128_t(a.amount.value) * b.base.amount.value + b.quote.amount.value - 1)/b.quote.amount.value;
-            FC_ASSERT( result <= GRAPHENE_MAX_SHARE_SUPPLY );
+            FC_ASSERT( result <= GRAPHENE_INITIAL_MAX_SHARE_SUPPLY );
             return asset( static_cast<int64_t>(result), b.base.asset_id );
          }
          FC_THROW_EXCEPTION( fc::assert_exception, "invalid asset::multiply_and_round_up(price)", ("asset",a)("price",b) );
@@ -101,8 +101,8 @@ namespace graphene { namespace protocol {
          return price{base,quote};
       } FC_CAPTURE_AND_RETHROW( (base)(quote) ) }
 
-      price price::max( asset_id_type base, asset_id_type quote ) { return asset( share_type(GRAPHENE_MAX_SHARE_SUPPLY), base ) / asset( share_type(1), quote); }
-      price price::min( asset_id_type base, asset_id_type quote ) { return asset( 1, base ) / asset( GRAPHENE_MAX_SHARE_SUPPLY, quote); }
+      price price::max( asset_id_type base, asset_id_type quote ) { return asset( share_type(GRAPHENE_INITIAL_MAX_SHARE_SUPPLY), base ) / asset( share_type(1), quote); }
+      price price::min( asset_id_type base, asset_id_type quote ) { return asset( 1, base ) / asset( GRAPHENE_INITIAL_MAX_SHARE_SUPPLY, quote); }
 
       price operator *  ( const price& p, const ratio_type& r )
       { try {
@@ -119,7 +119,7 @@ namespace graphene { namespace protocol {
 
          bool shrinked = false;
          bool using_max = false;
-         static const int128_t max( GRAPHENE_MAX_SHARE_SUPPLY );
+         static const int128_t max( GRAPHENE_INITIAL_MAX_SHARE_SUPPLY );
          while( cp.numerator() > max || cp.denominator() > max )
          {
             if( cp.numerator() == 1 )
@@ -203,7 +203,7 @@ namespace graphene { namespace protocol {
        *  There exists some cases where the debt and collateral values are so small that
        *  dividing by the collateral ratio will result in a 0 price or really poor
        *  rounding errors.   No matter what the collateral part of the price ratio can
-       *  never go to 0 and the debt can never go more than GRAPHENE_MAX_SHARE_SUPPLY
+       *  never go to 0 and the debt can never go more than GRAPHENE_INITIAL_MAX_SHARE_SUPPLY
        *
        *  CR * DEBT/COLLAT or DEBT/(COLLAT/CR)
        *
@@ -215,7 +215,7 @@ namespace graphene { namespace protocol {
          boost::rational<int128_t> ratio( collateral_ratio, GRAPHENE_COLLATERAL_RATIO_DENOM );
          auto cp = swan * ratio;
 
-         while( cp.numerator() > GRAPHENE_MAX_SHARE_SUPPLY || cp.denominator() > GRAPHENE_MAX_SHARE_SUPPLY )
+         while( cp.numerator() > GRAPHENE_INITIAL_MAX_SHARE_SUPPLY || cp.denominator() > GRAPHENE_INITIAL_MAX_SHARE_SUPPLY )
             cp = boost::rational<int128_t>( (cp.numerator() >> 1)+1, (cp.denominator() >> 1)+1 );
 
          return  (  asset( static_cast<int64_t>(cp.denominator()), collateral.asset_id )
@@ -273,7 +273,7 @@ namespace graphene { namespace protocol {
          boost::rational<int128_t> ratio( GRAPHENE_COLLATERAL_RATIO_DENOM, maximum_short_squeeze_ratio );
          auto cp = sp * ratio;
 
-         while( cp.numerator() > GRAPHENE_MAX_SHARE_SUPPLY || cp.denominator() > GRAPHENE_MAX_SHARE_SUPPLY )
+         while( cp.numerator() > GRAPHENE_INITIAL_MAX_SHARE_SUPPLY || cp.denominator() > GRAPHENE_INITIAL_MAX_SHARE_SUPPLY )
             cp = boost::rational<int128_t>( (cp.numerator() >> 1)+(cp.numerator()&1),
                                             (cp.denominator() >> 1)+(cp.denominator()&1) );
 

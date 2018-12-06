@@ -58,7 +58,7 @@ struct force_settle_database_fixture : database_fixture {
          uint16_t flags = charge_market_fee;
          uint16_t precision = 2;
          asset_id_type backing_asset = {};
-         share_type max_supply = GRAPHENE_MAX_SHARE_SUPPLY;
+         share_type max_supply = GRAPHENE_INITIAL_MAX_SHARE_SUPPLY;
 
          asset_create_operation creator;
          creator.issuer = issuer;
@@ -66,7 +66,7 @@ struct force_settle_database_fixture : database_fixture {
          creator.symbol = name;
          creator.precision = precision;
 
-         creator.common_options.max_supply = max_supply;
+         creator.common_options.initial_max_supply = max_supply;
          creator.common_options.market_fee_percent = market_fee_percent;
          if (issuer == GRAPHENE_WITNESS_ACCOUNT)
             flags |= witness_fed_asset;

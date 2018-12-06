@@ -74,6 +74,76 @@ vector<std::reference_wrapper<const typename Index::object_type>> database::sort
    return refs;
 }
 
+/*template<class Index>
+vector<std::reference_wrapper<const typename Index::object_type>> database::sort_standby_objects(size_t count) const
+{
+   using ObjectType = typename Index::object_type;
+   const auto& all_objects = get_index_type<Index>().indices();
+   size_t active_wit_count = count;
+   size_t total_wit_count = 100;
+   size_t all_object_count = all_objects.size();
+   count = std::min(total_wit_count, all_object_count);
+   vector<std::reference_wrapper<const ObjectType>> refs;
+
+   if(all_objects.size() <= active_wit_count){
+      return refs;
+   }
+   
+   refs.reserve(all_objects.size());
+   std::transform(all_objects.begin(), all_objects.end(),
+                  std::back_inserter(refs),
+                  [](const ObjectType& o) { return std::cref(o); });
+   std::partial_sort(refs.begin(), refs.begin() + count, refs.end(),
+                   [this](const ObjectType& a, const ObjectType& b)->bool {
+      share_type oa_vote = _vote_tally_buffer[a.vote_id];
+      share_type ob_vote = _vote_tally_buffer[b.vote_id];
+      if( oa_vote != ob_vote )
+         return oa_vote > ob_vote;
+      return a.vote_id < b.vote_id;
+   });
+
+   auto first = refs.begin() + active_wit_count;
+   auto last = refs.begin() + count;
+   vector<std::reference_wrapper<const ObjectType>> standby_wits;
+   standby_wits.reserve(count - active_wit_count);
+   std::copy(first, last, std::inserter(standby_wits, standby_wits.end()));
+
+   return standby_wits;
+}*/
+
+void database::handle_core_inflation()
+{
+   const global_property_object& gpo = get_global_properties();
+   
+   if (gpo.parameters.core_inflation_amount > 0) 
+   {
+      const asset_dynamic_data_object& core_dd = get_core_dynamic_data();
+      modify( core_dd, [gpo](asset_dynamic_data_object& addo) {
+         addo.current_max_supply += gpo.parameters.core_inflation_amount;
+      });
+   }
+}
+
+/*void database::handle_marketing_fees()
+{
+   const global_property_object& gpo = get_global_properties();
+   if (gpo.marketing_partner_account_name != "" ) 
+   {
+      auto& acnt_indx = get_index_type<account_index>();
+      auto marketing_partner_itr = acnt_indx.indices().get<by_name>().find( gpo.marketing_partner_account_name );
+      if ( marketing_partner_itr != acnt_indx.indices().get<by_name>().end() )
+      {
+         // Found current marketing partner account.
+         // Now give the marketing partner all the accumulated fees for them and zero it out on the db
+         const asset_dynamic_data_object& core_dd = get_core_dynamic_data();
+         adjust_balance(marketing_partner_itr->id,  asset(core_dd.accumulated_fees_for_marketing_partner, asset_id_type()));
+         modify( core_dd, [](asset_dynamic_data_object& addo) {
+            addo.accumulated_fees_for_marketing_partner = 0;
+         });
+      }
+   }
+}
+*/
 template<class Type>
 void database::perform_account_maintenance(Type tally_helper)
 {
@@ -412,7 +482,7 @@ void database::initialize_budget_record( fc::time_point_sec now, budget_record& 
    rec.from_initial_reserve = core.reserved(*this);
    rec.from_accumulated_fees = core_dd.accumulated_fees;
    rec.from_unused_witness_budget = dpo.witness_budget;
-   rec.max_supply = core.options.max_supply;
+   rec.initial_max_supply = core.options.initial_max_supply;
 
    if(    (dpo.last_budget_time == fc::time_point_sec())
        || (now <= dpo.last_budget_time) )
@@ -434,7 +504,7 @@ void database::initialize_budget_record( fc::time_point_sec now, budget_record& 
    // Similarly, we consider leftover witness_budget to be burned
    // at the BEGINNING of the maintenance interval.
    reserve += dpo.witness_budget;
-
+   
    fc::uint128_t budget_u128 = reserve.value;
    budget_u128 *= uint64_t(dt);
    budget_u128 *= GRAPHENE_CORE_ASSET_CYCLE_RATE;
@@ -477,10 +547,10 @@ void database::process_budget()
       //
       assert( gpo.parameters.block_interval > 0 );
       uint64_t blocks_to_maint = (uint64_t(time_to_maint) + gpo.parameters.block_interval - 1) / gpo.parameters.block_interval;
-
+      // blocks_to_maint = number of blocks in previous maintenance cycle
       // blocks_to_maint > 0 because time_to_maint > 0,
       // which means numerator is at least equal to block_interval
-
+      
       budget_record rec;
       initialize_budget_record( now, rec );
       share_type available_funds = rec.total_budget;
@@ -947,10 +1017,7 @@ void database::process_bitassets()
 }
 
 /****
- * @brief a one-time data process to correct max_supply
- * 
- * NOTE: while exceeding max_supply happened in mainnet, it seemed to have corrected
- * itself before HF 1465. But this method must remain to correct some assets in testnet
+ * @brief a one-time data process to correct initial_max_supply
  */
 void process_hf_1465( database& db )
 {
@@ -960,22 +1027,22 @@ void process_hf_1465( database& db )
    {
       const auto& current_asset = *asset_itr;
       graphene::chain::share_type current_supply = current_asset.dynamic_data(db).current_supply;
-      graphene::chain::share_type max_supply = current_asset.options.max_supply;
-      if (current_supply > max_supply && max_supply != GRAPHENE_MAX_SHARE_SUPPLY)
+      graphene::chain::share_type initial_max_supply = current_asset.options.initial_max_supply;
+      if (current_supply > initial_max_supply && initial_max_supply != GRAPHENE_INITIAL_MAX_SHARE_SUPPLY)
       {
-         wlog( "Adjusting max_supply of ${asset} because current_supply (${current_supply}) is greater than ${old}.", 
+         wlog( "Adjusting initial_max_supply of ${asset} because current_supply (${current_supply}) is greater than ${old}.", 
                ("asset", current_asset.symbol) 
                ("current_supply", current_supply.value)
-               ("old", max_supply));
+               ("old", initial_max_supply));
          db.modify<asset_object>( current_asset, [current_supply](asset_object& obj) {
-            obj.options.max_supply = graphene::chain::share_type(std::min(current_supply.value, GRAPHENE_MAX_SHARE_SUPPLY));
+            obj.options.initial_max_supply = graphene::chain::share_type(std::min(current_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY));
          });
       }
    }
 }
 
 /****
- * @brief a one-time data process to correct current_supply of BTS token in the BitShares mainnet
+ * @brief a one-time data process to correct current_supply of TUSC token in the BitShares mainnet
  */
 void process_hf_2103( database& db )
 {
@@ -1445,6 +1512,9 @@ void database::perform_chain_maintenance(const signed_block& next_block, const g
       }
    }
 
+   // Handle hard forks here
+   // TODO: remove BitShares specific hardforks.
+
    if( (dgpo.next_maintenance_time < HARDFORK_613_TIME) && (next_maintenance_time >= HARDFORK_613_TIME) )
       deprecate_annual_members(*this);
 
@@ -1473,7 +1543,7 @@ void database::perform_chain_maintenance(const signed_block& next_block, const g
    // Update tickets. Note: the new values will take effect only on the next maintenance interval
    if ( dgpo.next_maintenance_time <= HARDFORK_CORE_2262_TIME && next_maintenance_time > HARDFORK_CORE_2262_TIME )
       process_hf_2262(*this);
-
+      
    modify(dgpo, [last_vote_tally_time, next_maintenance_time](dynamic_global_property_object& d) {
       d.next_maintenance_time = next_maintenance_time;
       d.last_vote_tally_time = last_vote_tally_time;

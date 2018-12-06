@@ -65,7 +65,7 @@ BOOST_AUTO_TEST_CASE( hardfork_protection_test )
       acop.symbol = "SAMCOIN";
       acop.precision = 2;
       acop.common_options.core_exchange_rate = price(asset(1,asset_id_type(1)),asset(1));
-      acop.common_options.max_supply = GRAPHENE_MAX_SHARE_SUPPLY;
+      acop.common_options.initial_max_supply = GRAPHENE_INITIAL_MAX_SHARE_SUPPLY;
       acop.common_options.market_fee_percent = 100;
       acop.common_options.flags = uiaflag;
       acop.common_options.issuer_permissions = uiamask;
@@ -342,7 +342,7 @@ BOOST_AUTO_TEST_CASE( prediction_market_global_settle_permission )
 
       // try to update the asset without enabling global_settle permission, should fail
       auop.new_options.issuer_permissions &= ~global_settle;
-      auop.new_options.max_supply -= 1;
+      auop.new_options.initial_max_supply -= 1;
       trx.operations.clear();
       trx.operations.push_back( auop );
       BOOST_CHECK_THROW( PUSH_TX(db, trx, ~0), fc::exception );
@@ -379,18 +379,18 @@ BOOST_AUTO_TEST_CASE( update_max_supply )
       asset_id_type uia_id = uia.id;
 
       // issue some to Sam
-      issue_uia( sam_id, uia.amount( GRAPHENE_MAX_SHARE_SUPPLY - 100 ) );
+      issue_uia( sam_id, uia.amount( GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 100 ) );
 
       BOOST_CHECK( uia_id(db).can_update_max_supply() );
-      BOOST_CHECK_EQUAL( uia_id(db).options.max_supply.value, GRAPHENE_MAX_SHARE_SUPPLY );
-      BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, GRAPHENE_MAX_SHARE_SUPPLY - 100 );
+      BOOST_CHECK_EQUAL( uia_id(db).options.initial_max_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY );
+      BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 100 );
 
       // update max supply to a smaller number
       asset_update_operation auop;
       auop.issuer = sam_id;
       auop.asset_to_update = uia_id;
       auop.new_options = uia_id(db).options;
-      auop.new_options.max_supply -= 101;
+      auop.new_options.initial_max_supply -= 101;
 
       trx.operations.clear();
       trx.operations.push_back( auop );
@@ -399,60 +399,60 @@ BOOST_AUTO_TEST_CASE( update_max_supply )
 
       BOOST_CHECK( uia_id(db).can_update_max_supply() );
       // max_supply < current_supply
-      BOOST_CHECK_EQUAL( uia_id(db).options.max_supply.value, GRAPHENE_MAX_SHARE_SUPPLY - 101 );
-      BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, GRAPHENE_MAX_SHARE_SUPPLY - 100 );
+      BOOST_CHECK_EQUAL( uia_id(db).options.initial_max_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 101 );
+      BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 100 );
 
       // advance to bsip48/75 hard fork
       generate_blocks( HARDFORK_BSIP_48_75_TIME );
       set_expiration( db, trx );
 
-      BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, uia_id(db).options.max_supply.value + 1 );
+      BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, uia_id(db).options.initial_max_supply.value + 1 );
       BOOST_CHECK( uia_id(db).can_update_max_supply() );
 
       // able to set max supply to be equal to current supply
-      auop.new_options.max_supply += 1;
+      auop.new_options.initial_max_supply += 1;
       trx.operations.clear();
       trx.operations.push_back( auop );
       PUSH_TX(db, trx, ~0);
 
       BOOST_CHECK( uia_id(db).can_update_max_supply() );
       // max_supply == current_supply
-      BOOST_CHECK_EQUAL( uia_id(db).options.max_supply.value, GRAPHENE_MAX_SHARE_SUPPLY - 100 );
-      BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, GRAPHENE_MAX_SHARE_SUPPLY - 100 );
+      BOOST_CHECK_EQUAL( uia_id(db).options.initial_max_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 100 );
+      BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 100 );
 
       // no longer able to set max supply to a number smaller than current supply
-      auop.new_options.max_supply -= 1;
+      auop.new_options.initial_max_supply -= 1;
       trx.operations.clear();
       trx.operations.push_back( auop );
       BOOST_CHECK_THROW( PUSH_TX(db, trx, ~0), fc::exception );
-      auop.new_options.max_supply += 1;
+      auop.new_options.initial_max_supply += 1;
 
       BOOST_CHECK( uia_id(db).can_update_max_supply() );
       // max_supply == current_supply
-      BOOST_CHECK_EQUAL( uia_id(db).options.max_supply.value, GRAPHENE_MAX_SHARE_SUPPLY - 100 );
-      BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, GRAPHENE_MAX_SHARE_SUPPLY - 100 );
+      BOOST_CHECK_EQUAL( uia_id(db).options.initial_max_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 100 );
+      BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 100 );
 
       // increase max supply again
-      auop.new_options.max_supply += 2;
+      auop.new_options.initial_max_supply += 2;
       trx.operations.clear();
       trx.operations.push_back( auop );
       PUSH_TX(db, trx, ~0);
 
       BOOST_CHECK( uia_id(db).can_update_max_supply() );
       // max_supply > current_supply
-      BOOST_CHECK_EQUAL( uia_id(db).options.max_supply.value, GRAPHENE_MAX_SHARE_SUPPLY - 98 );
-      BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, GRAPHENE_MAX_SHARE_SUPPLY - 100 );
+      BOOST_CHECK_EQUAL( uia_id(db).options.initial_max_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 98 );
+      BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 100 );
 
       // decrease max supply
-      auop.new_options.max_supply -= 1;
+      auop.new_options.initial_max_supply -= 1;
       trx.operations.clear();
       trx.operations.push_back( auop );
       PUSH_TX(db, trx, ~0);
 
       BOOST_CHECK( uia_id(db).can_update_max_supply() );
       // max_supply > current_supply
-      BOOST_CHECK_EQUAL( uia_id(db).options.max_supply.value, GRAPHENE_MAX_SHARE_SUPPLY - 99 );
-      BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, GRAPHENE_MAX_SHARE_SUPPLY - 100 );
+      BOOST_CHECK_EQUAL( uia_id(db).options.initial_max_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 99 );
+      BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 100 );
 
       // update flag to disable updating of max supply
       auop.new_options.flags |= lock_max_supply;
@@ -462,20 +462,20 @@ BOOST_AUTO_TEST_CASE( update_max_supply )
 
       BOOST_CHECK( !uia_id(db).can_update_max_supply() );
       // max_supply > current_supply
-      BOOST_CHECK_EQUAL( uia_id(db).options.max_supply.value, GRAPHENE_MAX_SHARE_SUPPLY - 99 );
-      BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, GRAPHENE_MAX_SHARE_SUPPLY - 100 );
+      BOOST_CHECK_EQUAL( uia_id(db).options.initial_max_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 99 );
+      BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 100 );
 
       // unable to update max supply
-      auop.new_options.max_supply -= 1;
+      auop.new_options.initial_max_supply -= 1;
       trx.operations.clear();
       trx.operations.push_back( auop );
       BOOST_CHECK_THROW( PUSH_TX(db, trx, ~0), fc::exception );
-      auop.new_options.max_supply += 1;
+      auop.new_options.initial_max_supply += 1;
 
       BOOST_CHECK( !uia_id(db).can_update_max_supply() );
       // max_supply > current_supply
-      BOOST_CHECK_EQUAL( uia_id(db).options.max_supply.value, GRAPHENE_MAX_SHARE_SUPPLY - 99 );
-      BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, GRAPHENE_MAX_SHARE_SUPPLY - 100 );
+      BOOST_CHECK_EQUAL( uia_id(db).options.initial_max_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 99 );
+      BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 100 );
 
       // update flag to enable updating of max supply
       auop.new_options.flags &= ~lock_max_supply;
@@ -485,19 +485,19 @@ BOOST_AUTO_TEST_CASE( update_max_supply )
 
       BOOST_CHECK( uia_id(db).can_update_max_supply() );
       // max_supply > current_supply
-      BOOST_CHECK_EQUAL( uia_id(db).options.max_supply.value, GRAPHENE_MAX_SHARE_SUPPLY - 99 );
-      BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, GRAPHENE_MAX_SHARE_SUPPLY - 100 );
+      BOOST_CHECK_EQUAL( uia_id(db).options.initial_max_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 99 );
+      BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 100 );
 
       // able to update max supply
-      auop.new_options.max_supply += 1;
+      auop.new_options.initial_max_supply += 1;
       trx.operations.clear();
       trx.operations.push_back( auop );
       PUSH_TX(db, trx, ~0);
 
       BOOST_CHECK( uia_id(db).can_update_max_supply() );
       // max_supply > current_supply
-      BOOST_CHECK_EQUAL( uia_id(db).options.max_supply.value, GRAPHENE_MAX_SHARE_SUPPLY - 98 );
-      BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, GRAPHENE_MAX_SHARE_SUPPLY - 100 );
+      BOOST_CHECK_EQUAL( uia_id(db).options.initial_max_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 98 );
+      BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 100 );
 
       // update flag to disable updating of max supply
       auop.new_options.flags |= lock_max_supply;
@@ -509,8 +509,8 @@ BOOST_AUTO_TEST_CASE( update_max_supply )
 
       BOOST_CHECK( !uia_id(db).can_update_max_supply() );
       // max_supply > current_supply
-      BOOST_CHECK_EQUAL( uia_id(db).options.max_supply.value, GRAPHENE_MAX_SHARE_SUPPLY - 98 );
-      BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, GRAPHENE_MAX_SHARE_SUPPLY - 100 );
+      BOOST_CHECK_EQUAL( uia_id(db).options.initial_max_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 98 );
+      BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 100 );
 
       // Able to propose the operation
       propose( auop );
@@ -524,20 +524,20 @@ BOOST_AUTO_TEST_CASE( update_max_supply )
 
       BOOST_CHECK( !uia_id(db).can_update_max_supply() );
       // max_supply > current_supply
-      BOOST_CHECK_EQUAL( uia_id(db).options.max_supply.value, GRAPHENE_MAX_SHARE_SUPPLY - 98 );
-      BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, GRAPHENE_MAX_SHARE_SUPPLY - 100 );
+      BOOST_CHECK_EQUAL( uia_id(db).options.initial_max_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 98 );
+      BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 100 );
 
       // unable to update max supply
-      auop.new_options.max_supply -= 1;
+      auop.new_options.initial_max_supply -= 1;
       trx.operations.clear();
       trx.operations.push_back( auop );
       BOOST_CHECK_THROW( PUSH_TX(db, trx, ~0), fc::exception );
-      auop.new_options.max_supply += 1;
+      auop.new_options.initial_max_supply += 1;
 
       BOOST_CHECK( !uia_id(db).can_update_max_supply() );
       // max_supply > current_supply
-      BOOST_CHECK_EQUAL( uia_id(db).options.max_supply.value, GRAPHENE_MAX_SHARE_SUPPLY - 98 );
-      BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, GRAPHENE_MAX_SHARE_SUPPLY - 100 );
+      BOOST_CHECK_EQUAL( uia_id(db).options.initial_max_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 98 );
+      BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 100 );
 
       // unable to enable the lock_max_supply flag
       auop.new_options.flags &= ~lock_max_supply;
@@ -548,8 +548,8 @@ BOOST_AUTO_TEST_CASE( update_max_supply )
 
       BOOST_CHECK( !uia_id(db).can_update_max_supply() );
       // max_supply > current_supply
-      BOOST_CHECK_EQUAL( uia_id(db).options.max_supply.value, GRAPHENE_MAX_SHARE_SUPPLY - 98 );
-      BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, GRAPHENE_MAX_SHARE_SUPPLY - 100 );
+      BOOST_CHECK_EQUAL( uia_id(db).options.initial_max_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 98 );
+      BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 100 );
 
       // able to update other parameters
       auto old_market_fee_percent = auop.new_options.market_fee_percent;
@@ -563,23 +563,23 @@ BOOST_AUTO_TEST_CASE( update_max_supply )
       BOOST_CHECK_EQUAL( uia_id(db).options.market_fee_percent, 120u );
 
       // reserve all supply
-      reserve_asset( sam_id, uia_id(db).amount( GRAPHENE_MAX_SHARE_SUPPLY - 100 ) );
+      reserve_asset( sam_id, uia_id(db).amount( GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 100 ) );
 
       BOOST_CHECK( !uia_id(db).can_update_max_supply() );
       // max_supply > current_supply
-      BOOST_CHECK_EQUAL( uia_id(db).options.max_supply.value, GRAPHENE_MAX_SHARE_SUPPLY - 98 );
+      BOOST_CHECK_EQUAL( uia_id(db).options.initial_max_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 98 );
       BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, 0 );
 
       // still unable to update max supply
-      auop.new_options.max_supply -= 1;
+      auop.new_options.initial_max_supply -= 1;
       trx.operations.clear();
       trx.operations.push_back( auop );
       BOOST_CHECK_THROW( PUSH_TX(db, trx, ~0), fc::exception );
-      auop.new_options.max_supply += 1;
+      auop.new_options.initial_max_supply += 1;
 
       BOOST_CHECK( !uia_id(db).can_update_max_supply() );
       // max_supply > current_supply
-      BOOST_CHECK_EQUAL( uia_id(db).options.max_supply.value, GRAPHENE_MAX_SHARE_SUPPLY - 98 );
+      BOOST_CHECK_EQUAL( uia_id(db).options.initial_max_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 98 );
       BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, 0 );
 
       // still unable to enable the lock_max_supply flag
@@ -591,7 +591,7 @@ BOOST_AUTO_TEST_CASE( update_max_supply )
 
       BOOST_CHECK( !uia_id(db).can_update_max_supply() );
       // max_supply > current_supply
-      BOOST_CHECK_EQUAL( uia_id(db).options.max_supply.value, GRAPHENE_MAX_SHARE_SUPPLY - 98 );
+      BOOST_CHECK_EQUAL( uia_id(db).options.initial_max_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 98 );
       BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, 0 );
 
       // able to reinstall the permission and do it
@@ -602,19 +602,19 @@ BOOST_AUTO_TEST_CASE( update_max_supply )
 
       BOOST_CHECK( !uia_id(db).can_update_max_supply() );
       // max_supply > current_supply
-      BOOST_CHECK_EQUAL( uia_id(db).options.max_supply.value, GRAPHENE_MAX_SHARE_SUPPLY - 98 );
+      BOOST_CHECK_EQUAL( uia_id(db).options.initial_max_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 98 );
       BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, 0 );
 
       // still unable to update max supply
-      auop.new_options.max_supply -= 1;
+      auop.new_options.initial_max_supply -= 1;
       trx.operations.clear();
       trx.operations.push_back( auop );
       BOOST_CHECK_THROW( PUSH_TX(db, trx, ~0), fc::exception );
-      auop.new_options.max_supply += 1;
+      auop.new_options.initial_max_supply += 1;
 
       BOOST_CHECK( !uia_id(db).can_update_max_supply() );
       // max_supply > current_supply
-      BOOST_CHECK_EQUAL( uia_id(db).options.max_supply.value, GRAPHENE_MAX_SHARE_SUPPLY - 98 );
+      BOOST_CHECK_EQUAL( uia_id(db).options.initial_max_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 98 );
       BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, 0 );
 
       // now able to enable the lock_max_supply flag
@@ -625,18 +625,18 @@ BOOST_AUTO_TEST_CASE( update_max_supply )
 
       BOOST_CHECK( uia_id(db).can_update_max_supply() );
       // max_supply > current_supply
-      BOOST_CHECK_EQUAL( uia_id(db).options.max_supply.value, GRAPHENE_MAX_SHARE_SUPPLY - 98 );
+      BOOST_CHECK_EQUAL( uia_id(db).options.initial_max_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 98 );
       BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, 0 );
 
       // update max supply
-      auop.new_options.max_supply -= 1;
+      auop.new_options.initial_max_supply -= 1;
       trx.operations.clear();
       trx.operations.push_back( auop );
       PUSH_TX(db, trx, ~0);
 
       BOOST_CHECK( uia_id(db).can_update_max_supply() );
       // max_supply > current_supply
-      BOOST_CHECK_EQUAL( uia_id(db).options.max_supply.value, GRAPHENE_MAX_SHARE_SUPPLY - 99 );
+      BOOST_CHECK_EQUAL( uia_id(db).options.initial_max_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 99 );
       BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, 0 );
 
       // issue some
@@ -644,7 +644,7 @@ BOOST_AUTO_TEST_CASE( update_max_supply )
 
       BOOST_CHECK( uia_id(db).can_update_max_supply() );
       // max_supply > current_supply
-      BOOST_CHECK_EQUAL( uia_id(db).options.max_supply.value, GRAPHENE_MAX_SHARE_SUPPLY - 99 );
+      BOOST_CHECK_EQUAL( uia_id(db).options.initial_max_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 99 );
       BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, 100 );
 
       // update permission to disable updating of lock_max_supply flag
@@ -656,7 +656,7 @@ BOOST_AUTO_TEST_CASE( update_max_supply )
       // still can update max supply
       BOOST_CHECK( uia_id(db).can_update_max_supply() );
       // max_supply > current_supply
-      BOOST_CHECK_EQUAL( uia_id(db).options.max_supply.value, GRAPHENE_MAX_SHARE_SUPPLY - 99 );
+      BOOST_CHECK_EQUAL( uia_id(db).options.initial_max_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 99 );
       BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, 100 );
 
       // unable to reinstall the permission
@@ -668,18 +668,18 @@ BOOST_AUTO_TEST_CASE( update_max_supply )
 
       BOOST_CHECK( uia_id(db).can_update_max_supply() );
       // max_supply > current_supply
-      BOOST_CHECK_EQUAL( uia_id(db).options.max_supply.value, GRAPHENE_MAX_SHARE_SUPPLY - 99 );
+      BOOST_CHECK_EQUAL( uia_id(db).options.initial_max_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 99 );
       BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, 100 );
 
       // update max supply
-      auop.new_options.max_supply -= 1;
+      auop.new_options.initial_max_supply -= 1;
       trx.operations.clear();
       trx.operations.push_back( auop );
       PUSH_TX(db, trx, ~0);
 
       BOOST_CHECK( uia_id(db).can_update_max_supply() );
       // max_supply > current_supply
-      BOOST_CHECK_EQUAL( uia_id(db).options.max_supply.value, GRAPHENE_MAX_SHARE_SUPPLY - 100 );
+      BOOST_CHECK_EQUAL( uia_id(db).options.initial_max_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 100 );
       BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, 100 );
 
       generate_block();
@@ -1004,7 +1004,7 @@ BOOST_AUTO_TEST_CASE( invalid_flags_in_asset )
       acop.symbol = "SAMCOIN";
       acop.precision = 2;
       acop.common_options.core_exchange_rate = price(asset(1,asset_id_type(1)),asset(1));
-      acop.common_options.max_supply = GRAPHENE_MAX_SHARE_SUPPLY;
+      acop.common_options.initial_max_supply = GRAPHENE_INITIAL_MAX_SHARE_SUPPLY;
       acop.common_options.market_fee_percent = 100;
       acop.common_options.flags = uiaflag;
       acop.common_options.issuer_permissions = uiamask;

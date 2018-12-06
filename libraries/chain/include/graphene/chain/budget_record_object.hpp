@@ -57,7 +57,7 @@ struct budget_record
    share_type supply_delta = 0;
 
    /// Maximum supply
-   share_type max_supply;
+   share_type initial_max_supply;
 
    /// Current supply
    share_type current_supply;
