@@ -192,14 +192,14 @@ void asset_publish_feed_operation::validate()const
 void asset_reserve_operation::validate()const
 {
    FC_ASSERT( fee.amount >= 0 );
-   FC_ASSERT( amount_to_reserve.amount.value <= GRAPHENE_MAX_SHARE_SUPPLY );
+   FC_ASSERT( amount_to_reserve.amount.value <= GRAPHENE_INITIAL_MAX_SHARE_SUPPLY );
    FC_ASSERT( amount_to_reserve.amount.value > 0 );
 }
 
 void asset_issue_operation::validate()const
 {
    FC_ASSERT( fee.amount >= 0 );
-   FC_ASSERT( asset_to_issue.amount.value <= GRAPHENE_MAX_SHARE_SUPPLY );
+   FC_ASSERT( asset_to_issue.amount.value <= GRAPHENE_INITIAL_MAX_SHARE_SUPPLY );
    FC_ASSERT( asset_to_issue.amount.value > 0 );
    FC_ASSERT( asset_to_issue.asset_id != asset_id_type(0) );
 }
@@ -272,8 +272,8 @@ void bitasset_options::validate() const
 
 void asset_options::validate()const
 {
-   FC_ASSERT( max_supply > 0 );
-   FC_ASSERT( max_supply <= GRAPHENE_MAX_SHARE_SUPPLY );
+   FC_ASSERT( initial_max_supply > 0 );
+   FC_ASSERT( initial_max_supply <= GRAPHENE_INITIAL_MAX_SHARE_SUPPLY );
    // The non-negative maker fee must be less than or equal to 100%
    FC_ASSERT( market_fee_percent <= GRAPHENE_100_PERCENT );
 
@@ -281,7 +281,7 @@ void asset_options::validate()const
    if( extensions.value.taker_fee_percent.valid() )
       FC_ASSERT( *extensions.value.taker_fee_percent <= GRAPHENE_100_PERCENT );
 
-   FC_ASSERT( max_market_fee >= 0 && max_market_fee <= GRAPHENE_MAX_SHARE_SUPPLY );
+   FC_ASSERT( max_market_fee >= 0 && max_market_fee <= GRAPHENE_INITIAL_MAX_SHARE_SUPPLY );
    // There must be no high bits in permissions whose meaning is not known.
    FC_ASSERT( 0 == (issuer_permissions & (uint16_t)(~ASSET_ISSUER_PERMISSION_MASK)) );
    // The permission-only bits can not be set in flag

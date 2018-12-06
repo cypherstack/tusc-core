@@ -270,7 +270,7 @@ BOOST_AUTO_TEST_CASE( credit_offer_crud_and_proposal_test )
       flat_map<account_id_type, share_type> borrower_map2;
       borrower_map2[account_id_type()] = 0;
       borrower_map2[sam_id] = 1;
-      borrower_map2[ted_id] = GRAPHENE_MAX_SHARE_SUPPLY;
+      borrower_map2[ted_id] = GRAPHENE_INITIAL_MAX_SHARE_SUPPLY;
 
       const credit_offer_object& coo2 = create_credit_offer( ted_id, usd_id, 1, 10000000u, duration2, 10000, true,
                                               disable_time2, collateral_map2, borrower_map2 );
@@ -332,7 +332,7 @@ BOOST_AUTO_TEST_CASE( credit_offer_crud_and_proposal_test )
       invalid_collateral_map1_3[eur_id] = price( asset(1), asset(2, usd_id) ); // quote asset type mismatch
 
       flat_map<asset_id_type, price> invalid_collateral_map1_4; // amount too big
-      invalid_collateral_map1_4[usd_id] = price( asset(GRAPHENE_MAX_SHARE_SUPPLY + 1), asset(1, usd_id) );
+      invalid_collateral_map1_4[usd_id] = price( asset(GRAPHENE_INITIAL_MAX_SHARE_SUPPLY + 1), asset(1, usd_id) );
 
       flat_map<asset_id_type, price> invalid_collateral_map1_5;
       invalid_collateral_map1_5[usd_id] = price( asset(2, usd_id), asset(1) ); // base asset type mismatch
@@ -348,7 +348,7 @@ BOOST_AUTO_TEST_CASE( credit_offer_crud_and_proposal_test )
       invalid_borrower_map2_1[sam_id] = -1; // negative amount
 
       auto invalid_borrower_map2_2 = borrower_map2;
-      invalid_borrower_map2_2[ted_id] = GRAPHENE_MAX_SHARE_SUPPLY + 1; // amount too big
+      invalid_borrower_map2_2[ted_id] = GRAPHENE_INITIAL_MAX_SHARE_SUPPLY + 1; // amount too big
 
       auto invalid_borrower_map2_3 = borrower_map2;
       invalid_borrower_map2_3[no_account_id] = 1; // account does not exist
@@ -377,7 +377,7 @@ BOOST_AUTO_TEST_CASE( credit_offer_crud_and_proposal_test )
                                               disable_time1, collateral_map1, {} ),
                          fc::exception );
       // Too big minimum deal amount
-      BOOST_CHECK_THROW( create_credit_offer( sam_id, core.id, 10000, 100, 3600, GRAPHENE_MAX_SHARE_SUPPLY + 1, false,
+      BOOST_CHECK_THROW( create_credit_offer( sam_id, core.id, 10000, 100, 3600, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY + 1, false,
                                               disable_time1, collateral_map1, {} ),
                          fc::exception );
       // Auto-disable time in the past and the offer is enabled
@@ -457,7 +457,7 @@ BOOST_AUTO_TEST_CASE( credit_offer_crud_and_proposal_test )
       BOOST_CHECK_THROW( update_credit_offer( sam_id, co1_id, {}, {}, {}, -1, {}, {}, {}, {} ),
                          fc::exception );
       BOOST_CHECK_THROW( update_credit_offer( sam_id, co1_id, {}, {}, {},
-                                              GRAPHENE_MAX_SHARE_SUPPLY + 1, {}, {}, {}, {} ),
+                                              GRAPHENE_INITIAL_MAX_SHARE_SUPPLY + 1, {}, {}, {}, {} ),
                          fc::exception );
       // Enabled but auto-disable time in the past
       BOOST_CHECK_THROW( update_credit_offer( sam_id, co1_id, {}, {}, {}, {}, true, {}, {}, {} ),

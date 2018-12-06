@@ -33,7 +33,6 @@
 namespace graphene { namespace protocol {
 
    bool is_valid_name( const string& s );
-   bool is_cheap_name( const string& n );
 
    /// These are the fields which can be updated by the active authority.
    struct account_options

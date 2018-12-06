@@ -138,7 +138,7 @@ void_result liquidity_pool_deposit_evaluator::do_evaluate(const liquidity_pool_d
 
    FC_ASSERT( (_pool->balance_a == 0) == (_share_asset_dyn_data->current_supply == 0), "Internal error" );
 
-   FC_ASSERT( _share_asset_dyn_data->current_supply < share_asset_obj.options.max_supply,
+   FC_ASSERT( _share_asset_dyn_data->current_supply < share_asset_obj.options.initial_max_supply,
               "Can not create new supply for the share asset" );
 
    FC_ASSERT( is_authorized_asset( d, *fee_paying_account, share_asset_obj ),
@@ -151,7 +151,7 @@ void_result liquidity_pool_deposit_evaluator::do_evaluate(const liquidity_pool_d
    if( _pool->balance_a == 0 )
    {
       share_type share_amount = std::max( op.amount_a.amount.value, op.amount_b.amount.value );
-      FC_ASSERT( share_amount <= share_asset_obj.options.max_supply,
+      FC_ASSERT( share_amount <= share_asset_obj.options.initial_max_supply,
                  "For initial deposit, each amount of the two assets in the pool should not be greater than "
                  "the maximum supply of the share asset" );
       _pool_receives_a = op.amount_a;
@@ -160,7 +160,7 @@ void_result liquidity_pool_deposit_evaluator::do_evaluate(const liquidity_pool_d
    }
    else
    {
-      share_type max_new_supply = share_asset_obj.options.max_supply - _share_asset_dyn_data->current_supply;
+      share_type max_new_supply = share_asset_obj.options.initial_max_supply - _share_asset_dyn_data->current_supply;
       fc::uint128_t max128( max_new_supply.value );
       fc::uint128_t supply128( _share_asset_dyn_data->current_supply.value );
       fc::uint128_t new_supply_if_a = supply128 * op.amount_a.amount.value / _pool->balance_a.value;

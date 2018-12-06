@@ -465,7 +465,7 @@ BOOST_FIXTURE_TEST_CASE( uia_tests, cli_fixture )
          graphene::chain::asset_options asset_ops;
          asset_ops.issuer_permissions = DEFAULT_UIA_ASSET_ISSUER_PERMISSION;
          asset_ops.flags = charge_market_fee | override_authority;
-         asset_ops.max_supply = 1000000;
+         asset_ops.initial_max_supply = 1000000;
          asset_ops.core_exchange_rate = price(asset(2),asset(1,asset_id_type(1)));
          auto result = con.wallet_api_ptr->create_asset("nathan", "BOBCOIN", 4, asset_ops, {}, true);
          if( formatters.find("create_asset") != formatters.end() )
@@ -614,7 +614,7 @@ BOOST_FIXTURE_TEST_CASE( mpa_tests, cli_fixture )
          graphene::chain::asset_options asset_ops;
          asset_ops.issuer_permissions = ASSET_ISSUER_PERMISSION_ENABLE_BITS_MASK;
          asset_ops.flags = charge_market_fee;
-         asset_ops.max_supply = 1000000;
+         asset_ops.initial_max_supply = 1000000;
          asset_ops.core_exchange_rate = price(asset(2),asset(1,asset_id_type(1)));
          graphene::chain::bitasset_options bit_opts;
          auto result = con.wallet_api_ptr->create_asset("nathan", "BOBCOIN", 4, asset_ops, bit_opts, true);
@@ -650,12 +650,12 @@ BOOST_FIXTURE_TEST_CASE( mpa_tests, cli_fixture )
          // Update asset
          BOOST_TEST_MESSAGE("Update asset");
          auto options = bobcoin.options;
-         BOOST_CHECK_EQUAL( options.max_supply.value, 1000000 );
-         options.max_supply = 2000000;
+         BOOST_CHECK_EQUAL( options.initial_max_supply.value, 1000000 );
+         options.initial_max_supply = 2000000;
          con.wallet_api_ptr->update_asset("BOBCOIN", {}, options, true);
          // Check
          bobcoin = con.wallet_api_ptr->get_asset("BOBCOIN");
-         BOOST_CHECK_EQUAL( bobcoin.options.max_supply.value, 2000000 );
+         BOOST_CHECK_EQUAL( bobcoin.options.initial_max_supply.value, 2000000 );
       }
       BOOST_CHECK(generate_block(app1));
       check_nathan_last_history( "Update asset" );
@@ -1447,7 +1447,7 @@ BOOST_AUTO_TEST_CASE( cli_multisig_transaction )
 
       // attempt to give cifer.test some bitshares
       BOOST_TEST_MESSAGE("Transferring bitshares from Nathan to cifer.test");
-      signed_transaction transfer_tx1 = con.wallet_api_ptr->transfer("nathan", "cifer.test", "10000", "1.3.0", "Here are some BTS for your new account", true);
+      signed_transaction transfer_tx1 = con.wallet_api_ptr->transfer("nathan", "cifer.test", "10000", "1.3.0", "Here are some TUSC for your new account", true);
 
       // transfer bts from cifer.test to nathan
       BOOST_TEST_MESSAGE("Transferring bitshares from cifer.test to nathan");
@@ -1600,7 +1600,7 @@ BOOST_AUTO_TEST_CASE( cli_create_htlc )
       try
       {
          graphene::chain::asset_options asset_ops;
-         asset_ops.max_supply = 1000000;
+         asset_ops.initial_max_supply = 1000000;
          asset_ops.core_exchange_rate = price(asset(2),asset(1,asset_id_type(1)));
          fc::optional<graphene::chain::bitasset_options> bit_opts;
          con.wallet_api_ptr->create_asset("nathan", "BOBCOIN", 5, asset_ops, bit_opts, true);
@@ -1642,7 +1642,7 @@ BOOST_AUTO_TEST_CASE( cli_create_htlc )
          con.wallet_api_ptr->issue_asset("bob", "5", "BOBCOIN", "Here are your BOBCOINs", true);
       }
 
-      BOOST_TEST_MESSAGE("Alice has agreed to buy 3 BOBCOIN from Bob for 3 BTS. Alice creates an HTLC");
+      BOOST_TEST_MESSAGE("Alice has agreed to buy 3 BOBCOIN from Bob for 3 TUSC. Alice creates an HTLC");
       // create an HTLC
       std::string preimage_string = "My Secret";
       fc::sha256 preimage_md = fc::sha256::hash(preimage_string);
@@ -1712,7 +1712,7 @@ BOOST_AUTO_TEST_CASE( cli_create_htlc )
       }
 
       // TODO: Bob can look at Alice's history to see her preimage
-      // Bob can use the preimage to retrieve his BTS
+      // Bob can use the preimage to retrieve his TUSC
       {
          BOOST_TEST_MESSAGE("Bob uses Alice's preimage to retrieve the BOBCOIN");
          std::string secret = "My Secret";
@@ -2147,7 +2147,7 @@ BOOST_AUTO_TEST_CASE( cli_create_htlc_bsip64 )
       try
       {
          graphene::chain::asset_options asset_ops;
-         asset_ops.max_supply = 1000000;
+         asset_ops.initial_max_supply = 1000000;
          asset_ops.core_exchange_rate = price(asset(2),asset(1,asset_id_type(1)));
          fc::optional<graphene::chain::bitasset_options> bit_opts;
          con.wallet_api_ptr->create_asset("nathan", "BOBCOIN", 5, asset_ops, bit_opts, true);
@@ -2189,7 +2189,7 @@ BOOST_AUTO_TEST_CASE( cli_create_htlc_bsip64 )
          con.wallet_api_ptr->issue_asset("bob", "5", "BOBCOIN", "Here are your BOBCOINs", true);
       }
 
-      BOOST_TEST_MESSAGE("Alice has agreed to buy 3 BOBCOIN from Bob for 3 BTS. Alice creates an HTLC");
+      BOOST_TEST_MESSAGE("Alice has agreed to buy 3 BOBCOIN from Bob for 3 TUSC. Alice creates an HTLC");
       // create an HTLC
       std::string preimage_string = "My Super Long Secret that is larger than 50 charaters. How do I look?\n";
       fc::hash160 preimage_md = fc::hash160::hash(preimage_string);
@@ -2272,7 +2272,7 @@ BOOST_AUTO_TEST_CASE( cli_create_htlc_bsip64 )
          BOOST_CHECK( hist[0].description.find("with preimage \"4d792") != hist[0].description.npos);
       }
 
-      // Bob can use the preimage to retrieve his BTS
+      // Bob can use the preimage to retrieve his TUSC
       {
          BOOST_TEST_MESSAGE("Bob uses Alice's preimage to retrieve the BOBCOIN");
          con.wallet_api_ptr->htlc_redeem(alice_htlc_id_as_string, "bob", preimage_string, true);

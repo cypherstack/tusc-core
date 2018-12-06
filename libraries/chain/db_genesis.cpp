@@ -73,7 +73,7 @@ void database::init_genesis(const genesis_state_type& genesis_state)
    // Create blockchain accounts
    fc::ecc::private_key null_private_key = fc::ecc::private_key::regenerate(fc::sha256::hash(string("null_key")));
    create<account_balance_object>([](account_balance_object& b) {
-      b.balance = GRAPHENE_MAX_SHARE_SUPPLY;
+      b.balance = GRAPHENE_INITIAL_MAX_SHARE_SUPPLY;
    });
    const account_object& committee_account =
       create<account_object>( [this](account_object& n) {
@@ -86,7 +86,7 @@ void database::init_genesis(const genesis_state_type& genesis_state)
          n.statistics = create<account_statistics_object>( [&n](account_statistics_object& s){
                            s.owner = n.id;
                            s.name = n.name;
-                           s.core_in_balance = GRAPHENE_MAX_SHARE_SUPPLY;
+                           s.core_in_balance = GRAPHENE_INITIAL_MAX_SHARE_SUPPLY;
                         }).id;
       });
    FC_ASSERT(committee_account.get_id() == GRAPHENE_COMMITTEE_ACCOUNT);
@@ -188,7 +188,7 @@ void database::init_genesis(const genesis_state_type& genesis_state)
    // Create core asset
    const asset_dynamic_data_object& core_dyn_asset =
       create<asset_dynamic_data_object>([](asset_dynamic_data_object& a) {
-         a.current_supply = GRAPHENE_MAX_SHARE_SUPPLY;
+         a.current_supply = GRAPHENE_INITIAL_MAX_SHARE_SUPPLY;
       });
    const asset_object& core_asset =
      create<asset_object>( [&genesis_state,&core_dyn_asset]( asset_object& a ) {
@@ -432,7 +432,7 @@ void database::init_genesis(const genesis_state_type& genesis_state)
    }
    else
    {
-       total_supplies[ asset_id_type(0) ] = GRAPHENE_MAX_SHARE_SUPPLY;
+       total_supplies[ asset_id_type(0) ] = GRAPHENE_INITIAL_MAX_SHARE_SUPPLY;
    }
 
    const auto& idx = get_index_type<asset_index>().indices().get<by_symbol>();

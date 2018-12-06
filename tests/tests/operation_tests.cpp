@@ -844,23 +844,23 @@ BOOST_AUTO_TEST_CASE( bsip77_hardfork_time_and_param_valid_range_test )
 
       // Before bsip77 hard fork, unable to create a bitasset with ICR
       BOOST_CHECK_THROW( create_bitasset( "USDBIT", sam_id, 100, charge_market_fee, 2, {},
-                                          GRAPHENE_MAX_SHARE_SUPPLY, 0 ), fc::exception );
+                                          GRAPHENE_INITIAL_MAX_SHARE_SUPPLY, 0 ), fc::exception );
       BOOST_CHECK_THROW( create_bitasset( "USDBIT", sam_id, 100, charge_market_fee, 2, {},
-                                          GRAPHENE_MAX_SHARE_SUPPLY, 1 ), fc::exception );
+                                          GRAPHENE_INITIAL_MAX_SHARE_SUPPLY, 1 ), fc::exception );
       BOOST_CHECK_THROW( create_bitasset( "USDBIT", sam_id, 100, charge_market_fee, 2, {},
-                                          GRAPHENE_MAX_SHARE_SUPPLY, 1000 ), fc::exception );
+                                          GRAPHENE_INITIAL_MAX_SHARE_SUPPLY, 1000 ), fc::exception );
       BOOST_CHECK_THROW( create_bitasset( "USDBIT", sam_id, 100, charge_market_fee, 2, {},
-                                          GRAPHENE_MAX_SHARE_SUPPLY, 1001 ), fc::exception );
+                                          GRAPHENE_INITIAL_MAX_SHARE_SUPPLY, 1001 ), fc::exception );
       BOOST_CHECK_THROW( create_bitasset( "USDBIT", sam_id, 100, charge_market_fee, 2, {},
-                                          GRAPHENE_MAX_SHARE_SUPPLY, 1750 ), fc::exception );
+                                          GRAPHENE_INITIAL_MAX_SHARE_SUPPLY, 1750 ), fc::exception );
       BOOST_CHECK_THROW( create_bitasset( "USDBIT", sam_id, 100, charge_market_fee, 2, {},
-                                          GRAPHENE_MAX_SHARE_SUPPLY, 32000 ), fc::exception );
+                                          GRAPHENE_INITIAL_MAX_SHARE_SUPPLY, 32000 ), fc::exception );
       BOOST_CHECK_THROW( create_bitasset( "USDBIT", sam_id, 100, charge_market_fee, 2, {},
-                                          GRAPHENE_MAX_SHARE_SUPPLY, 32001 ), fc::exception );
+                                          GRAPHENE_INITIAL_MAX_SHARE_SUPPLY, 32001 ), fc::exception );
 
       // Can create a bitasset without ICR
       const auto& bitusd = create_bitasset( "USDBIT", sam.id, 100, charge_market_fee, 2, {},
-                                            GRAPHENE_MAX_SHARE_SUPPLY );
+                                            GRAPHENE_INITIAL_MAX_SHARE_SUPPLY );
       asset_id_type usd_id = bitusd.id;
 
       // helper function for setting ICR for an asset
@@ -891,7 +891,7 @@ BOOST_AUTO_TEST_CASE( bsip77_hardfork_time_and_param_valid_range_test )
       // helper function for creating a proposal which contains an asset_create_operation with ICR
       auto propose_create_bitasset = [&]( string name, optional<uint16_t> icr ) {
          asset_create_operation acop = make_bitasset( name, sam_id, 100, charge_market_fee, 2, {},
-                                                      GRAPHENE_MAX_SHARE_SUPPLY, icr );
+                                                      GRAPHENE_INITIAL_MAX_SHARE_SUPPLY, icr );
          proposal_create_operation cop;
          cop.fee_paying_account = GRAPHENE_TEMP_ACCOUNT;
          cop.expiration_time = db.head_block_time() + 100;
@@ -950,23 +950,23 @@ BOOST_AUTO_TEST_CASE( bsip77_hardfork_time_and_param_valid_range_test )
 
       // Unable to create a bitasset with an invalid ICR
       BOOST_CHECK_THROW( create_bitasset( "USDBITB", sam_id, 0, charge_market_fee, 2, {},
-                                          GRAPHENE_MAX_SHARE_SUPPLY, 0 ), fc::exception );
+                                          GRAPHENE_INITIAL_MAX_SHARE_SUPPLY, 0 ), fc::exception );
       BOOST_CHECK_THROW( create_bitasset( "USDBITB", sam_id, 1, charge_market_fee, 2, {},
-                                          GRAPHENE_MAX_SHARE_SUPPLY, 0 ), fc::exception );
+                                          GRAPHENE_INITIAL_MAX_SHARE_SUPPLY, 0 ), fc::exception );
       BOOST_CHECK_THROW( create_bitasset( "USDBITB", sam_id, 1000, charge_market_fee, 2, {},
-                                          GRAPHENE_MAX_SHARE_SUPPLY, 0 ), fc::exception );
+                                          GRAPHENE_INITIAL_MAX_SHARE_SUPPLY, 0 ), fc::exception );
       BOOST_CHECK_THROW( create_bitasset( "USDBITB", sam_id, 32001, charge_market_fee, 2, {},
-                                          GRAPHENE_MAX_SHARE_SUPPLY, 0 ), fc::exception );
+                                          GRAPHENE_INITIAL_MAX_SHARE_SUPPLY, 0 ), fc::exception );
       // Able to create a bitasset with a valid ICR
       asset_id_type usdc_id = create_bitasset( "USDBITC", sam.id, 100, charge_market_fee, 2, {},
-                                               GRAPHENE_MAX_SHARE_SUPPLY, 1001 ).id;
+                                               GRAPHENE_INITIAL_MAX_SHARE_SUPPLY, 1001 ).id;
       asset_id_type usdd_id = create_bitasset( "USDBITD", sam.id, 100, charge_market_fee, 2, {},
-                                               GRAPHENE_MAX_SHARE_SUPPLY, 1750 ).id;
+                                               GRAPHENE_INITIAL_MAX_SHARE_SUPPLY, 1750 ).id;
       asset_id_type usde_id = create_bitasset( "USDBITE", sam.id, 100, charge_market_fee, 2, {},
-                                               GRAPHENE_MAX_SHARE_SUPPLY, 32000 ).id;
+                                               GRAPHENE_INITIAL_MAX_SHARE_SUPPLY, 32000 ).id;
       // Able to create a bitasset without ICR
       asset_id_type usdf_id = create_bitasset( "USDBITF", sam.id, 100, charge_market_fee, 2, {},
-                                               GRAPHENE_MAX_SHARE_SUPPLY, {} ).id;
+                                               GRAPHENE_INITIAL_MAX_SHARE_SUPPLY, {} ).id;
 
       BOOST_CHECK( usdc_id(db).bitasset_data(db).options.extensions.value.initial_collateral_ratio == 1001 );
       BOOST_CHECK( usdd_id(db).bitasset_data(db).options.extensions.value.initial_collateral_ratio == 1750 );
@@ -1261,7 +1261,7 @@ BOOST_AUTO_TEST_CASE( more_call_order_update_test_after_hardfork_bsip77_when_icr
 
       ACTORS((dan)(sam)(alice)(bob));
       const auto& bitusd = create_bitasset( "USDBIT", sam.id, 100, charge_market_fee, 2, {},
-                                            GRAPHENE_MAX_SHARE_SUPPLY, 1050 ); // ICR = 1.05
+                                            GRAPHENE_INITIAL_MAX_SHARE_SUPPLY, 1050 ); // ICR = 1.05
       const auto& core   = asset_id_type()(db);
 
       asset_id_type usd_id = bitusd.id;
@@ -1462,7 +1462,7 @@ BOOST_AUTO_TEST_CASE( more_call_order_update_test_after_hardfork_bsip77_when_icr
 
       ACTORS((dan)(sam)(alice)(bob));
       const auto& bitusd = create_bitasset( "USDBIT", sam.id, 100, charge_market_fee, 2, {},
-                                            GRAPHENE_MAX_SHARE_SUPPLY, {} ); // ICR is not set
+                                            GRAPHENE_INITIAL_MAX_SHARE_SUPPLY, {} ); // ICR is not set
       const auto& core   = asset_id_type()(db);
 
       transfer(committee_account, dan_id, asset(10000000));
@@ -1923,10 +1923,8 @@ BOOST_AUTO_TEST_CASE( create_account_test )
       REQUIRE_THROW_WITH_VALUE(op, name, "saM");
       REQUIRE_THROW_WITH_VALUE(op, name, "sAm");
       REQUIRE_THROW_WITH_VALUE(op, name, "6j");
-      REQUIRE_THROW_WITH_VALUE(op, name, "j-");
       REQUIRE_THROW_WITH_VALUE(op, name, "-j");
       REQUIRE_THROW_WITH_VALUE(op, name, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-      REQUIRE_THROW_WITH_VALUE(op, name, "aaaa.");
       REQUIRE_THROW_WITH_VALUE(op, name, ".aaaa");
       REQUIRE_THROW_WITH_VALUE(op, options.voting_account, account_id_type(999999999));
 
@@ -2179,7 +2177,7 @@ BOOST_AUTO_TEST_CASE( create_uia )
       creator.issuer = account_id_type();
       creator.fee = asset();
       creator.symbol = UIA_TEST_SYMBOL;
-      creator.common_options.max_supply = 100000000;
+      creator.common_options.initial_max_supply = 100000000;
       creator.precision = 2;
       creator.common_options.market_fee_percent = GRAPHENE_MAX_MARKET_FEE_PERCENT/100; /*1%*/
       creator.common_options.issuer_permissions = DEFAULT_UIA_ASSET_ISSUER_PERMISSION;
@@ -2192,7 +2190,7 @@ BOOST_AUTO_TEST_CASE( create_uia )
       BOOST_CHECK(test_asset.symbol == UIA_TEST_SYMBOL);
       BOOST_CHECK(asset(1, test_asset_id) * test_asset.options.core_exchange_rate == asset(2));
       BOOST_CHECK((test_asset.options.flags & white_list) == 0);
-      BOOST_CHECK(test_asset.options.max_supply == 100000000);
+      BOOST_CHECK(test_asset.options.initial_max_supply == 100000000);
       BOOST_CHECK(!test_asset.bitasset_data_id.valid());
       BOOST_CHECK(test_asset.options.market_fee_percent == GRAPHENE_MAX_MARKET_FEE_PERCENT/100);
       GRAPHENE_REQUIRE_THROW(PUSH_TX( db, trx, ~0 ), fc::exception);
@@ -2205,8 +2203,8 @@ BOOST_AUTO_TEST_CASE( create_uia )
       auto op = trx.operations.back().get<asset_create_operation>();
       op.symbol = "TESTFAIL";
       REQUIRE_THROW_WITH_VALUE(op, issuer, account_id_type(99999999));
-      REQUIRE_THROW_WITH_VALUE(op, common_options.max_supply, -1);
-      REQUIRE_THROW_WITH_VALUE(op, common_options.max_supply, 0);
+      REQUIRE_THROW_WITH_VALUE(op, common_options.initial_max_supply, -1);
+      REQUIRE_THROW_WITH_VALUE(op, common_options.initial_max_supply, 0);
       REQUIRE_THROW_WITH_VALUE(op, symbol, "A");
       REQUIRE_THROW_WITH_VALUE(op, symbol, "qqq");
       REQUIRE_THROW_WITH_VALUE(op, symbol, "11");
@@ -3064,9 +3062,8 @@ BOOST_AUTO_TEST_CASE( call_order_update_evaluator_test )
 
       // attempt to increase current supply beyond max_supply
       const auto& bitjmj = create_bitasset( "JMJBIT", alice_id, 100, charge_market_fee, 2U, 
-            asset_id_type{}, GRAPHENE_MAX_SHARE_SUPPLY / 2 );
-      auto bitjmj_id = bitjmj.get_id();
-      share_type original_max_supply = bitjmj.options.max_supply;
+            asset_id_type{}, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY / 2 );
+      share_type original_max_supply = bitjmj.options.initial_max_supply;
 
       {
          BOOST_TEST_MESSAGE( "Setting price feed to $100000 / 1" );
@@ -3081,81 +3078,12 @@ BOOST_AUTO_TEST_CASE( call_order_update_evaluator_test )
          call_order_update_operation op;
          op.funding_account = alice_id;
          op.delta_collateral = asset( 1000000 * GRAPHENE_BLOCKCHAIN_PRECISION );
-         op.delta_debt = asset( bitjmj.options.max_supply + 1, bitjmj.id );
+         op.delta_debt = asset( bitjmj.options.initial_max_supply + 1, bitjmj.id );
          transaction tx;
          tx.operations.push_back( op );
          set_expiration( db, tx );
          PUSH_TX( db, tx, database::skip_tapos_check | database::skip_transaction_signatures );
          generate_block();
-      }
-
-      // advance past hardfork
-      generate_blocks( HARDFORK_CORE_1465_TIME );
-      set_expiration( db, trx );
-
-      // bitjmj should have its problem corrected
-      auto newbitjmj = bitjmj_id(db);
-      BOOST_REQUIRE_GT(newbitjmj.options.max_supply.value, original_max_supply.value);
-
-      // now try with an asset after the hardfork
-      const auto& bitusd = create_bitasset( "USDBIT", alice_id, 100, charge_market_fee, 2U, 
-            asset_id_type{}, GRAPHENE_MAX_SHARE_SUPPLY / 2 );
-
-      {
-         BOOST_TEST_MESSAGE( "Setting price feed to $100000 / 1" );
-         update_feed_producers( bitusd, {alice_id} );
-         price_feed current_feed;
-         current_feed.settlement_price = bitusd.amount( 100000 ) / core.amount(1);
-         publish_feed( bitusd, alice_id(db), current_feed );
-      }
-
-      {
-         BOOST_TEST_MESSAGE( "Attempting a call_order_update that exceeds max_supply" );
-         call_order_update_operation op;
-         op.funding_account = alice_id;
-         op.delta_collateral = asset( 1000000 * GRAPHENE_BLOCKCHAIN_PRECISION );
-         op.delta_debt = asset( bitusd.options.max_supply + 1, bitusd.id );
-         transaction tx;
-         tx.operations.push_back( op );
-         set_expiration( db, tx );
-         GRAPHENE_REQUIRE_THROW(PUSH_TX( db, tx, database::skip_tapos_check | database::skip_transaction_signatures ), fc::exception );
-      }
-
-      {
-         BOOST_TEST_MESSAGE( "Creating 2 bitusd and transferring to bob (increases current supply)" );
-         call_order_update_operation op;
-         op.funding_account = alice_id;
-         op.delta_collateral = asset( 100 * GRAPHENE_BLOCKCHAIN_PRECISION );
-         op.delta_debt = asset( 2, bitusd.id );
-         transaction tx;
-         tx.operations.push_back( op );
-         set_expiration( db, tx );
-         PUSH_TX( db, tx, database::skip_tapos_check | database::skip_transaction_signatures );
-         transfer( alice_id(db), bob_id(db), asset( 2, bitusd.id ) );
-      }
-
-      {
-         BOOST_TEST_MESSAGE( "Again attempting a call_order_update_operation that is max_supply - 1 (should throw)" );
-         call_order_update_operation op;
-         op.funding_account = alice_id;
-         op.delta_collateral = asset( 100000 * GRAPHENE_BLOCKCHAIN_PRECISION );
-         op.delta_debt = asset( bitusd.options.max_supply - 1, bitusd.id );
-         transaction tx;
-         tx.operations.push_back( op );
-         set_expiration( db, tx );
-         GRAPHENE_REQUIRE_THROW(PUSH_TX( db, tx, database::skip_tapos_check | database::skip_transaction_signatures ), fc::exception);
-      }
-
-      {
-         BOOST_TEST_MESSAGE( "Again attempting a call_order_update_operation that equals max_supply (should work)" );
-         call_order_update_operation op;
-         op.funding_account = alice_id;
-         op.delta_collateral = asset( 100000 * GRAPHENE_BLOCKCHAIN_PRECISION );
-         op.delta_debt = asset( bitusd.options.max_supply - 2, bitusd.id );
-         transaction tx;
-         tx.operations.push_back( op );
-         set_expiration( db, tx );
-         PUSH_TX( db, tx, database::skip_tapos_check | database::skip_transaction_signatures );
       }
    } FC_LOG_AND_RETHROW()
 }

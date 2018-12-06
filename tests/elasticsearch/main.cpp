@@ -186,7 +186,7 @@ BOOST_AUTO_TEST_CASE(elasticsearch_account_history) {
          flat_map<account_id_type, share_type> borrower_map2;
          borrower_map2[account_id_type()] = 0;
          borrower_map2[sam_id] = 1;
-         borrower_map2[ted_id] = GRAPHENE_MAX_SHARE_SUPPLY;
+         borrower_map2[ted_id] = GRAPHENE_INITIAL_MAX_SHARE_SUPPLY;
 
          const credit_offer_object& coo2 = create_credit_offer( ted_id, usd_id, 1, 10000000u, duration2, 10000, true,
                                               disable_time2, collateral_map2, borrower_map2 );

@@ -972,7 +972,7 @@ BOOST_AUTO_TEST_CASE( overflow )
 
    wait_for_hf_core_216();
 
-   bid_collateral( borrower(),  back().amount(2200), swan().amount(GRAPHENE_MAX_SHARE_SUPPLY - 1) );
+   bid_collateral( borrower(),  back().amount(2200), swan().amount(GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 1) );
    bid_collateral( borrower2(), back().amount(2100), swan().amount(1399) );
    set_feed(1, 2);
    wait_for_maintenance();
@@ -1096,7 +1096,7 @@ BOOST_AUTO_TEST_CASE( hf2281_asset_permissions_flags_test )
       acop.symbol = "SAMCOIN";
       acop.precision = 2;
       acop.common_options.core_exchange_rate = price(asset(1,asset_id_type(1)),asset(1));
-      acop.common_options.max_supply = GRAPHENE_MAX_SHARE_SUPPLY;
+      acop.common_options.max_supply = GRAPHENE_INITIAL_MAX_SHARE_SUPPLY;
       acop.common_options.market_fee_percent = 100;
       acop.common_options.flags = charge_market_fee;
       acop.common_options.issuer_permissions = UIA_ASSET_ISSUER_PERMISSION_MASK | disable_collateral_bidding;

@@ -67,7 +67,7 @@ BOOST_AUTO_TEST_CASE( bsrm_hardfork_protection_test )
       acop.symbol = "SAMCOIN";
       acop.precision = 2;
       acop.common_options.core_exchange_rate = price(asset(1,asset_id_type(1)),asset(1));
-      acop.common_options.max_supply = GRAPHENE_MAX_SHARE_SUPPLY;
+      acop.common_options.max_supply = GRAPHENE_INITIAL_MAX_SHARE_SUPPLY;
       acop.common_options.market_fee_percent = 100;
       acop.common_options.flags = old_bitflag;
       acop.common_options.issuer_permissions = old_bitmask;
@@ -481,7 +481,7 @@ BOOST_AUTO_TEST_CASE( bsrm_asset_permissions_flags_extensions_test )
       acop.symbol = "SAMCOIN";
       acop.precision = 2;
       acop.common_options.core_exchange_rate = price(asset(1,asset_id_type(1)),asset(1));
-      acop.common_options.max_supply = GRAPHENE_MAX_SHARE_SUPPLY;
+      acop.common_options.max_supply = GRAPHENE_INITIAL_MAX_SHARE_SUPPLY;
       acop.common_options.market_fee_percent = 100;
       acop.common_options.flags = charge_market_fee;
       acop.common_options.issuer_permissions = UIA_ASSET_ISSUER_PERMISSION_MASK | disable_bsrm_update;
@@ -928,7 +928,7 @@ BOOST_AUTO_TEST_CASE( update_bsrm_after_individual_settlement_to_fund )
       acop.symbol = "SAMMPA";
       acop.precision = 2;
       acop.common_options.core_exchange_rate = price(asset(1,asset_id_type(1)),asset(1));
-      acop.common_options.max_supply = GRAPHENE_MAX_SHARE_SUPPLY;
+      acop.common_options.max_supply = GRAPHENE_INITIAL_MAX_SHARE_SUPPLY;
       acop.common_options.market_fee_percent = 100; // 1%
       acop.common_options.flags = charge_market_fee;
       acop.common_options.issuer_permissions = ASSET_ISSUER_PERMISSION_ENABLE_BITS_MASK;
@@ -1078,7 +1078,7 @@ BOOST_AUTO_TEST_CASE( update_bsrm_after_individual_settlement_to_order )
       acop.symbol = "SAMMPA";
       acop.precision = 2;
       acop.common_options.core_exchange_rate = price(asset(1,asset_id_type(1)),asset(1));
-      acop.common_options.max_supply = GRAPHENE_MAX_SHARE_SUPPLY;
+      acop.common_options.max_supply = GRAPHENE_INITIAL_MAX_SHARE_SUPPLY;
       acop.common_options.market_fee_percent = 100; // 1%
       acop.common_options.flags = charge_market_fee;
       acop.common_options.issuer_permissions = ASSET_ISSUER_PERMISSION_ENABLE_BITS_MASK;
@@ -1236,7 +1236,7 @@ BOOST_AUTO_TEST_CASE( undercollateralized_and_update_bsrm_from_no_settlement )
       acop.symbol = "SAMMPA";
       acop.precision = 2;
       acop.common_options.core_exchange_rate = price(asset(1,asset_id_type(1)),asset(1));
-      acop.common_options.max_supply = GRAPHENE_MAX_SHARE_SUPPLY;
+      acop.common_options.max_supply = GRAPHENE_INITIAL_MAX_SHARE_SUPPLY;
       acop.common_options.market_fee_percent = 100; // 1%
       acop.common_options.flags = charge_market_fee;
       acop.common_options.issuer_permissions = ASSET_ISSUER_PERMISSION_ENABLE_BITS_MASK;
@@ -1381,7 +1381,7 @@ BOOST_AUTO_TEST_CASE( manual_gs_test )
       acop.symbol = "SAMMPA";
       acop.precision = 2;
       acop.common_options.core_exchange_rate = price(asset(1,asset_id_type(1)),asset(1));
-      acop.common_options.max_supply = GRAPHENE_MAX_SHARE_SUPPLY;
+      acop.common_options.max_supply = GRAPHENE_INITIAL_MAX_SHARE_SUPPLY;
       acop.common_options.market_fee_percent = 100; // 1%
       acop.common_options.flags = charge_market_fee;
       acop.common_options.issuer_permissions = ASSET_ISSUER_PERMISSION_ENABLE_BITS_MASK;

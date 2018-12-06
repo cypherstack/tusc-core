@@ -59,8 +59,8 @@ BOOST_AUTO_TEST_CASE( valid_name_test )
    BOOST_CHECK( is_valid_name( "aa" ) );
    BOOST_CHECK( !is_valid_name( "aA" ) );
    BOOST_CHECK( is_valid_name( "a0" ) );
-   BOOST_CHECK( !is_valid_name( "a." ) );
-   BOOST_CHECK( !is_valid_name( "a-" ) );
+   BOOST_CHECK( is_valid_name( "a." ) );
+   BOOST_CHECK( is_valid_name( "a-" ) );
 
    BOOST_CHECK( is_valid_name( "aaa" ) );
    BOOST_CHECK( !is_valid_name( "aAa" ) );
@@ -71,7 +71,7 @@ BOOST_AUTO_TEST_CASE( valid_name_test )
    BOOST_CHECK( is_valid_name( "aa0" ) );
    BOOST_CHECK( !is_valid_name( "aA0" ) );
    BOOST_CHECK( is_valid_name( "a00" ) );
-   BOOST_CHECK( !is_valid_name( "a.0" ) );
+   BOOST_CHECK( is_valid_name( "a.0" ) );
    BOOST_CHECK( is_valid_name( "a-0" ) );
 
    BOOST_CHECK(  is_valid_name( "aaa-bbb-ccc" ) );
@@ -86,12 +86,12 @@ BOOST_AUTO_TEST_CASE( valid_name_test )
    BOOST_CHECK( !is_valid_name( ".aaa-bbb-ccc" ) );
    BOOST_CHECK( !is_valid_name( "/aaa-bbb-ccc" ) );
 
-   BOOST_CHECK( !is_valid_name( "aaa-bbb-ccc-" ) );
-   BOOST_CHECK( !is_valid_name( "aaa-bbb-ccc." ) );
-   BOOST_CHECK( !is_valid_name( "aaa-bbb-ccc.." ) );
+   BOOST_CHECK( is_valid_name( "aaa-bbb-ccc-" ) );
+   BOOST_CHECK( is_valid_name( "aaa-bbb-ccc." ) );
+   BOOST_CHECK( is_valid_name( "aaa-bbb-ccc.." ) );
    BOOST_CHECK( !is_valid_name( "aaa-bbb-ccc/" ) );
 
-   BOOST_CHECK( !is_valid_name( "aaa..bbb-ccc" ) );
+   BOOST_CHECK( is_valid_name( "aaa..bbb-ccc" ) );
    BOOST_CHECK( is_valid_name( "aaa.bbb-ccc" ) );
    BOOST_CHECK( is_valid_name( "aaa.bbb.ccc" ) );
 
@@ -176,8 +176,8 @@ BOOST_AUTO_TEST_CASE( price_test )
     BOOST_CHECK_THROW( price( asset(1), asset(1) ).validate(), fc::exception );
     BOOST_CHECK_THROW( price( asset(1, asset_id_type(1)), asset(1, asset_id_type(1)) ).validate(), fc::exception );
 
-    constexpr int64_t max_amount = GRAPHENE_MAX_SHARE_SUPPLY;
-    constexpr int64_t too_big_amount = GRAPHENE_MAX_SHARE_SUPPLY + 1;
+    constexpr int64_t max_amount = GRAPHENE_INITIAL_MAX_SHARE_SUPPLY;
+    constexpr int64_t too_big_amount = GRAPHENE_INITIAL_MAX_SHARE_SUPPLY + 1;
 
     price( asset(1), asset(max_amount, asset_id_type(1)) ).validate();
     price( asset(max_amount), asset(1, asset_id_type(1)) ).validate();
@@ -251,8 +251,8 @@ BOOST_AUTO_TEST_CASE( price_test )
     BOOST_CHECK( less_than_max * ratio_type(7,1) == price(asset(less_than_max.base.amount*7/11),asset(1,asset_id_type(1))) );
     less_than_max.quote.amount = 92131419;
     BOOST_CHECK( less_than_max * ratio_type(7,1) == price(asset(less_than_max.base.amount*7/92131419),asset(1,asset_id_type(1))) );
-    less_than_max.quote.amount = 192131419;
-    BOOST_CHECK( less_than_max * ratio_type(7,1) == price(asset(less_than_max.base.amount.value*7>>3),asset(192131419>>3,asset_id_type(1))) );
+    less_than_max.quote.amount = 1000000000000000;
+    BOOST_CHECK( less_than_max * ratio_type(7,1) == price(asset(less_than_max.base.amount.value*7>>3),asset(1000000000000000>>3,asset_id_type(1))) );
 
     price more_than_min = price_min(0,1);
     more_than_min.base.amount = 11;
@@ -284,8 +284,8 @@ BOOST_AUTO_TEST_CASE( price_test )
     BOOST_CHECK_THROW( asset(1) * price( asset(0), asset(1, asset_id_type(1)) ), fc::assert_exception );
     BOOST_CHECK_THROW( asset(1) * price( asset(1, asset_id_type(1)), asset(0) ), fc::assert_exception );
     // overflow
-    BOOST_CHECK_THROW( asset(GRAPHENE_MAX_SHARE_SUPPLY/2+1) * price( asset(1), asset(2, asset_id_type(1)) ), fc::assert_exception );
-    BOOST_CHECK_THROW( asset(2) * price( asset(GRAPHENE_MAX_SHARE_SUPPLY/2+1, asset_id_type(1)), asset(1) ), fc::assert_exception );
+    BOOST_CHECK_THROW( asset(GRAPHENE_INITIAL_MAX_SHARE_SUPPLY/2+1) * price( asset(1), asset(2, asset_id_type(1)) ), fc::assert_exception );
+    BOOST_CHECK_THROW( asset(2) * price( asset(GRAPHENE_INITIAL_MAX_SHARE_SUPPLY/2+1, asset_id_type(1)), asset(1) ), fc::assert_exception );
 
     BOOST_CHECK( asset(1).multiply_and_round_up( price( asset(1), asset(1, asset_id_type(1)) ) ) == asset(1, asset_id_type(1)) );
     BOOST_CHECK( asset(1).multiply_and_round_up( price( asset(1, asset_id_type(1)), asset(1) ) ) == asset(1, asset_id_type(1)) );
@@ -308,9 +308,9 @@ BOOST_AUTO_TEST_CASE( price_test )
     BOOST_CHECK_THROW( asset(1).multiply_and_round_up( price( asset(0), asset(1, asset_id_type(1)) ) ), fc::assert_exception );
     BOOST_CHECK_THROW( asset(1).multiply_and_round_up( price( asset(1, asset_id_type(1)), asset(0) ) ), fc::assert_exception );
     // overflow
-    BOOST_CHECK_THROW( asset(GRAPHENE_MAX_SHARE_SUPPLY/2+1).multiply_and_round_up( price( asset(1), asset(2, asset_id_type(1)) ) ),
+    BOOST_CHECK_THROW( asset(GRAPHENE_INITIAL_MAX_SHARE_SUPPLY/2+1).multiply_and_round_up( price( asset(1), asset(2, asset_id_type(1)) ) ),
                        fc::assert_exception );
-    BOOST_CHECK_THROW( asset(2).multiply_and_round_up( price( asset(GRAPHENE_MAX_SHARE_SUPPLY/2+1, asset_id_type(1)), asset(1) ) ),
+    BOOST_CHECK_THROW( asset(2).multiply_and_round_up( price( asset(GRAPHENE_INITIAL_MAX_SHARE_SUPPLY/2+1, asset_id_type(1)), asset(1) ) ),
                        fc::assert_exception );
 
     price_feed dummy;
@@ -347,7 +347,7 @@ BOOST_AUTO_TEST_CASE( price_multiplication_test )
 { try {
    // random test
    std::mt19937_64 gen( time(NULL) );
-   std::uniform_int_distribution<int64_t> amt_uid(1, GRAPHENE_MAX_SHARE_SUPPLY);
+   std::uniform_int_distribution<int64_t> amt_uid(1, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY);
    std::uniform_int_distribution<int64_t> amt_uid2(1, 1000*1000*1000);
    std::uniform_int_distribution<int64_t> amt_uid3(1, 1000*1000);
    std::uniform_int_distribution<int64_t> amt_uid4(1, 1000);
@@ -395,7 +395,7 @@ BOOST_AUTO_TEST_CASE( price_multiplication_test )
       }
       catch( fc::assert_exception& e )
       {
-         BOOST_CHECK( e.to_detail_string().find( "result <= GRAPHENE_MAX_SHARE_SUPPLY" ) != string::npos );
+         BOOST_CHECK( e.to_detail_string().find( "result <= GRAPHENE_INITIAL_MAX_SHARE_SUPPLY" ) != string::npos );
       }
    }
 } FC_LOG_AND_RETHROW() }

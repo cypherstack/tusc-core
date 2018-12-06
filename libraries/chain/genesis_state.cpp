@@ -48,9 +48,9 @@ void genesis_state_type::override_witness_signing_keys( const std::string& new_k
 FC_REFLECT_DERIVED_NO_TYPENAME(graphene::chain::genesis_state_type::initial_account_type, BOOST_PP_SEQ_NIL,
            (name)(owner_key)(active_key)(is_lifetime_member) )
 
-FC_REFLECT_DERIVED_NO_TYPENAME(graphene::chain::genesis_state_type::initial_asset_type, BOOST_PP_SEQ_NIL,
-           (symbol)(issuer_name)(description)(precision)(max_supply)(accumulated_fees)(is_bitasset)
-           (collateral_records))
+//FC_REFLECT_DERIVED_NO_TYPENAME(graphene::chain::genesis_state_type::initial_asset_type, BOOST_PP_SEQ_NIL,
+//           (symbol)(issuer_name)(description)(precision)(intitial_max_supply)(accumulated_fees)(is_bitasset)
+//           (collateral_records))
 
 FC_REFLECT_DERIVED_NO_TYPENAME(graphene::chain::genesis_state_type::initial_asset_type::initial_collateral_position,
            BOOST_PP_SEQ_NIL, (owner)(collateral)(debt))
@@ -70,11 +70,11 @@ FC_REFLECT_DERIVED_NO_TYPENAME(graphene::chain::genesis_state_type::initial_comm
 FC_REFLECT_DERIVED_NO_TYPENAME(graphene::chain::genesis_state_type::initial_worker_type, BOOST_PP_SEQ_NIL,
            (owner_name)(daily_pay))
 
-FC_REFLECT_DERIVED_NO_TYPENAME(graphene::chain::genesis_state_type, BOOST_PP_SEQ_NIL,
-           (initial_timestamp)(max_core_supply)(initial_parameters)(initial_accounts)(initial_assets)
-           (initial_balances)(initial_vesting_balances)(initial_active_witnesses)(initial_witness_candidates)
-           (initial_committee_candidates)(initial_worker_candidates)
-           (immutable_parameters))
+//FC_REFLECT_DERIVED_NO_TYPENAME(graphene::chain::genesis_state_type, BOOST_PP_SEQ_NIL,
+//           (initial_timestamp)(initial_max_core_supply)(initial_parameters)(initial_accounts)(initial_assets)
+ //          (initial_balances)(initial_vesting_balances)(initial_active_witnesses)(initial_witness_candidates)
+  //         (initial_committee_candidates)(initial_worker_candidates)
+   ///        (immutable_parameters))
 
 GRAPHENE_IMPLEMENT_EXTERNAL_SERIALIZATION( graphene::chain::genesis_state_type::initial_account_type )
 GRAPHENE_IMPLEMENT_EXTERNAL_SERIALIZATION( graphene::chain::genesis_state_type::initial_asset_type )
@@ -84,4 +84,4 @@ GRAPHENE_IMPLEMENT_EXTERNAL_SERIALIZATION( graphene::chain::genesis_state_type::
 GRAPHENE_IMPLEMENT_EXTERNAL_SERIALIZATION( graphene::chain::genesis_state_type::initial_witness_type )
 GRAPHENE_IMPLEMENT_EXTERNAL_SERIALIZATION( graphene::chain::genesis_state_type::initial_committee_member_type )
 GRAPHENE_IMPLEMENT_EXTERNAL_SERIALIZATION( graphene::chain::genesis_state_type::initial_worker_type )
-GRAPHENE_IMPLEMENT_EXTERNAL_SERIALIZATION( graphene::chain::genesis_state_type )
+//GRAPHENE_IMPLEMENT_EXTERNAL_SERIALIZATION( graphene::chain::genesis_state_type )

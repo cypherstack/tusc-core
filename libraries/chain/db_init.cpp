@@ -196,5 +196,4 @@ void database::initialize_indexes()
    add_index< primary_index< simple_index< fba_accumulator_object       > > >();
    add_index< primary_index<credit_deal_summary_index                     > >();
 }
-
 } }

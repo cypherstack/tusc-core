@@ -54,9 +54,9 @@ static void validate_acceptable_borrowers( const flat_map<account_id_type, share
       const auto& max_borrow_amount = borrower.second.value;
       FC_ASSERT( max_borrow_amount >= 0,
                  "Maximum amount to borrow for acceptable borrowers should not be negative" );
-      FC_ASSERT( max_borrow_amount <= GRAPHENE_MAX_SHARE_SUPPLY,
+      FC_ASSERT( max_borrow_amount <= GRAPHENE_INITIAL_MAX_SHARE_SUPPLY,
                  "Maximum amount to borrow for acceptable borrowers should not be greater than ${max}",
-                 ("max", GRAPHENE_MAX_SHARE_SUPPLY) );
+                 ("max", GRAPHENE_INITIAL_MAX_SHARE_SUPPLY) );
    }
 }
 
@@ -68,9 +68,9 @@ void credit_offer_create_operation::validate()const
               "Maximum duration should not be greater than ${d} days",
               ("d", GRAPHENE_MAX_CREDIT_DEAL_DAYS) );
    FC_ASSERT( min_deal_amount >= 0, "Minimum deal amount should not be negative" );
-   FC_ASSERT( min_deal_amount <= GRAPHENE_MAX_SHARE_SUPPLY,
+   FC_ASSERT( min_deal_amount <= GRAPHENE_INITIAL_MAX_SHARE_SUPPLY,
               "Minimum deal amount should not be greater than ${max}",
-              ("max", GRAPHENE_MAX_SHARE_SUPPLY) );
+              ("max", GRAPHENE_INITIAL_MAX_SHARE_SUPPLY) );
 
    validate_acceptable_collateral( acceptable_collateral, &asset_type );
    validate_acceptable_borrowers( acceptable_borrowers );
@@ -111,9 +111,9 @@ void credit_offer_update_operation::validate()const
    {
       updating_something = true;
       FC_ASSERT( *min_deal_amount >= 0, "Minimum deal amount should not be negative" );
-      FC_ASSERT( *min_deal_amount <= GRAPHENE_MAX_SHARE_SUPPLY,
+      FC_ASSERT( *min_deal_amount <= GRAPHENE_INITIAL_MAX_SHARE_SUPPLY,
                  "Minimum deal amount should not be greater than ${max}",
-                 ("max", GRAPHENE_MAX_SHARE_SUPPLY) );
+                 ("max", GRAPHENE_INITIAL_MAX_SHARE_SUPPLY) );
    }
    if( enabled.valid() )
       updating_something = true;
