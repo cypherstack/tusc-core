@@ -99,7 +99,7 @@ namespace detail {
       initial_state.initial_accounts.emplace_back("nathan", nathan_key.get_public_key());
       initial_state.initial_balances.push_back({nathan_key.get_public_key(),
                                                 GRAPHENE_SYMBOL,
-                                                GRAPHENE_MAX_SHARE_SUPPLY});
+                                                GRAPHENE_INITIAL_MAX_SHARE_SUPPLY});
       initial_state.initial_chain_id = fc::sha256::hash( "BOGUS" );
 
       return initial_state;
@@ -142,7 +142,6 @@ void application_impl::reset_p2p_node(const fc::path& data_dir)
    {
       // https://bitsharestalk.org/index.php/topic,23715.0.html
       vector<string> seeds = {
-         #include "../egenesis/seed-nodes.txt"
       };
       _p2p_network->add_seed_nodes(seeds);
    }

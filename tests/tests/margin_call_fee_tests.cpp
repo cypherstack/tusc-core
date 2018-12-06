@@ -80,11 +80,11 @@ struct bitasset_database_fixture : database_fixture {
       creator.issuer = issuer.id;
       creator.fee = asset();
       creator.symbol = name;
-      creator.common_options.max_supply = 0;
+      creator.common_options.initial_max_supply = 0;
       creator.precision = precision;
 
       creator.common_options.core_exchange_rate = core_exchange_rate;
-      creator.common_options.max_supply = GRAPHENE_MAX_SHARE_SUPPLY;
+      creator.common_options.initial_max_supply = GRAPHENE_INITIAL_MAX_SHARE_SUPPLY;
       creator.common_options.flags = flags;
       creator.common_options.issuer_permissions = flags;
       creator.common_options.market_fee_percent = maker_fee_percent;
@@ -329,7 +329,7 @@ BOOST_FIXTURE_TEST_SUITE(margin_call_fee_tests, bitasset_database_fixture)
          const uint16_t smartbit_margin_call_fee_ratio = 50; // 5% expressed in terms of GRAPHENE_COLLATERAL_RATIO_DENOM
          // Define the margin call fee ratio
          create_bitasset("SMARTBIT", smartissuer_id, smartbit_market_fee_percent, charge_market_fee, 4, core_id,
-                         GRAPHENE_MAX_SHARE_SUPPLY, {}, smartbit_margin_call_fee_ratio);
+                         GRAPHENE_INITIAL_MAX_SHARE_SUPPLY, {}, smartbit_margin_call_fee_ratio);
          // Obtain asset object after a block is generated to obtain the final object that is commited to the database
          generate_block();
          const asset_object smartbit = get_asset("SMARTBIT");
@@ -598,7 +598,7 @@ BOOST_FIXTURE_TEST_SUITE(margin_call_fee_tests, bitasset_database_fixture)
          const uint16_t smartbit_margin_call_fee_ratio = 50; // 5% expressed in terms of GRAPHENE_COLLATERAL_RATIO_DENOM
          // Define the margin call fee ratio
          create_bitasset("SMARTBIT", smartissuer_id, smartbit_market_fee_percent, charge_market_fee, 4, core_id,
-                         GRAPHENE_MAX_SHARE_SUPPLY, {}, smartbit_margin_call_fee_ratio);
+                         GRAPHENE_INITIAL_MAX_SHARE_SUPPLY, {}, smartbit_margin_call_fee_ratio);
          // Obtain asset object after a block is generated to obtain the final object that is commited to the database
          generate_block();
          const asset_object smartbit = get_asset("SMARTBIT");
@@ -929,7 +929,7 @@ BOOST_FIXTURE_TEST_SUITE(margin_call_fee_tests, bitasset_database_fixture)
          const uint16_t smartbit_margin_call_fee_ratio = 50; // 5% expressed in terms of GRAPHENE_COLLATERAL_RATIO_DENOM
          // Define the margin call fee ratio
          create_bitasset("SMARTBIT", smartissuer_id, smartbit_market_fee_percent, charge_market_fee, 4, core_id,
-                         GRAPHENE_MAX_SHARE_SUPPLY, {}, smartbit_margin_call_fee_ratio);
+                         GRAPHENE_INITIAL_MAX_SHARE_SUPPLY, {}, smartbit_margin_call_fee_ratio);
          // Obtain asset object after a block is generated to obtain the final object that is commited to the database
          generate_block();
          const asset_object smartbit = get_asset("SMARTBIT");
@@ -1276,7 +1276,7 @@ BOOST_FIXTURE_TEST_SUITE(margin_call_fee_tests, bitasset_database_fixture)
          const uint16_t smartbit_margin_call_fee_ratio = 50; // 5% expressed in terms of GRAPHENE_COLLATERAL_RATIO_DENOM
          // Define the margin call fee ratio
          create_bitasset("SMARTBIT", smartissuer_id, smartbit_market_fee_percent, charge_market_fee, 4, core_id,
-                         GRAPHENE_MAX_SHARE_SUPPLY, {}, smartbit_margin_call_fee_ratio);
+                         GRAPHENE_INITIAL_MAX_SHARE_SUPPLY, {}, smartbit_margin_call_fee_ratio);
          // Obtain asset object after a block is generated to obtain the final object that is commited to the database
          generate_block();
          const asset_object smartbit = get_asset("SMARTBIT");
@@ -1574,7 +1574,7 @@ BOOST_FIXTURE_TEST_SUITE(margin_call_fee_tests, bitasset_database_fixture)
          const uint16_t smartbit_margin_call_fee_ratio = 50; // 5% expressed in terms of GRAPHENE_COLLATERAL_RATIO_DENOM
          // Define the margin call fee ratio
          create_bitasset("SMARTBIT", smartissuer_id, smartbit_market_fee_percent, charge_market_fee, 4, core_id,
-                         GRAPHENE_MAX_SHARE_SUPPLY, {}, smartbit_margin_call_fee_ratio);
+                         GRAPHENE_INITIAL_MAX_SHARE_SUPPLY, {}, smartbit_margin_call_fee_ratio);
          // Obtain asset object after a block is generated to obtain the final object that is commited to the database
          generate_block();
          const asset_object smartbit = get_asset("SMARTBIT");
@@ -1944,7 +1944,7 @@ BOOST_FIXTURE_TEST_SUITE(margin_call_fee_tests, bitasset_database_fixture)
          const uint16_t final_mcfr = 50; // 5% expressed in terms of GRAPHENE_COLLATERAL_RATIO_DENOM
          // Define the margin call fee ratio
          create_bitasset("SMARTBIT", smartissuer_id, smartbit_market_fee_percent, charge_market_fee, 4, core_id,
-                         GRAPHENE_MAX_SHARE_SUPPLY, {}, initial_mcfr);
+                         GRAPHENE_INITIAL_MAX_SHARE_SUPPLY, {}, initial_mcfr);
          // Obtain asset object after a block is generated to obtain the final object that is commited to the database
          generate_block();
          const asset_object smartbit = get_asset("SMARTBIT");
@@ -2336,7 +2336,7 @@ BOOST_FIXTURE_TEST_SUITE(margin_call_fee_tests, bitasset_database_fixture)
          {
             const asset_create_operation create_op = make_bitasset("USDBIT", assetowner_id, market_fee_percent,
                                                                    charge_market_fee, 4, core_id,
-                                                                   GRAPHENE_MAX_SHARE_SUPPLY, icr_opt, mcfr_opt);
+                                                                   GRAPHENE_INITIAL_MAX_SHARE_SUPPLY, icr_opt, mcfr_opt);
             trx.clear();
             trx.operations.push_back(create_op);
             sign(trx, assetowner_private_key);
@@ -2349,7 +2349,7 @@ BOOST_FIXTURE_TEST_SUITE(margin_call_fee_tests, bitasset_database_fixture)
          {
             const asset_create_operation create_op = make_bitasset("USDBIT", assetowner_id, market_fee_percent,
                                                                    charge_market_fee, 4, core_id,
-                                                                   GRAPHENE_MAX_SHARE_SUPPLY, icr_opt, mcfr_opt);
+                                                                   GRAPHENE_INITIAL_MAX_SHARE_SUPPLY, icr_opt, mcfr_opt);
             proposal_create_operation cop;
             cop.review_period_seconds = 86400;
             uint32_t buffer_seconds = 60 * 60;
@@ -2371,7 +2371,7 @@ BOOST_FIXTURE_TEST_SUITE(margin_call_fee_tests, bitasset_database_fixture)
          {
             const asset_create_operation create_op = make_bitasset("USDBIT", assetowner_id, market_fee_percent,
                                                                    charge_market_fee, 4, core_id,
-                                                                   GRAPHENE_MAX_SHARE_SUPPLY, icr_opt, mcfr_null_opt);
+                                                                   GRAPHENE_INITIAL_MAX_SHARE_SUPPLY, icr_opt, mcfr_null_opt);
 
             trx.clear();
             trx.operations.push_back(create_op);
@@ -2449,7 +2449,7 @@ BOOST_FIXTURE_TEST_SUITE(margin_call_fee_tests, bitasset_database_fixture)
             mcfr_opt = mcfr_3;
             const asset_create_operation create_op = make_bitasset("CNYBIT", assetowner_id, market_fee_percent,
                                                                    charge_market_fee, 4, core_id,
-                                                                   GRAPHENE_MAX_SHARE_SUPPLY, icr_opt, mcfr_opt);
+                                                                   GRAPHENE_INITIAL_MAX_SHARE_SUPPLY, icr_opt, mcfr_opt);
 
             trx.clear();
             trx.operations.push_back(create_op);
@@ -2477,7 +2477,7 @@ BOOST_FIXTURE_TEST_SUITE(margin_call_fee_tests, bitasset_database_fixture)
             mcfr_opt = mcfr_1;
             const asset_create_operation create_op = make_bitasset("RUBBIT", assetowner_id, market_fee_percent,
                                                                    charge_market_fee, 4, core_id,
-                                                                   GRAPHENE_MAX_SHARE_SUPPLY, icr_opt, mcfr_opt);
+                                                                   GRAPHENE_INITIAL_MAX_SHARE_SUPPLY, icr_opt, mcfr_opt);
 
             proposal_create_operation cop;
             cop.review_period_seconds = 86400;
@@ -2592,7 +2592,7 @@ BOOST_FIXTURE_TEST_SUITE(margin_call_fee_tests, bitasset_database_fixture)
          {
             const asset_create_operation create_op = make_bitasset("YENBIT", assetowner_id, market_fee_percent,
                                                                    charge_market_fee, 4, core_id,
-                                                                   GRAPHENE_MAX_SHARE_SUPPLY, icr_opt, mcfr_null_opt);
+                                                                   GRAPHENE_INITIAL_MAX_SHARE_SUPPLY, icr_opt, mcfr_null_opt);
 
             trx.clear();
             trx.operations.push_back(create_op);

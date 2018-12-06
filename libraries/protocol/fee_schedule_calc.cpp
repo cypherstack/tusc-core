@@ -83,7 +83,7 @@ namespace graphene { namespace protocol {
       {
          auto scaled = fc::uint128_t(required_fee) * scale;
          scaled /= GRAPHENE_100_PERCENT;
-         FC_ASSERT( scaled <= GRAPHENE_MAX_SHARE_SUPPLY,
+         FC_ASSERT( scaled <= GRAPHENE_INITIAL_MAX_SHARE_SUPPLY,
                     "Required fee after scaling would exceed maximum possible supply" );
          required_fee = static_cast<uint64_t>(scaled);
       }

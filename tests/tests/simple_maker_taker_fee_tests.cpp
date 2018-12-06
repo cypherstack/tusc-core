@@ -79,11 +79,11 @@ struct simple_maker_taker_database_fixture : database_fixture {
       creator.issuer = issuer.id;
       creator.fee = asset();
       creator.symbol = name;
-      creator.common_options.max_supply = 0;
+      creator.common_options.initial_max_supply = 0;
       creator.precision = precision;
 
       creator.common_options.core_exchange_rate = core_exchange_rate;
-      creator.common_options.max_supply = GRAPHENE_MAX_SHARE_SUPPLY;
+      creator.common_options.initial_max_supply = GRAPHENE_INITIAL_MAX_SHARE_SUPPLY;
       creator.common_options.flags = flags;
       creator.common_options.issuer_permissions = flags;
       creator.common_options.market_fee_percent = maker_fee_percent;
