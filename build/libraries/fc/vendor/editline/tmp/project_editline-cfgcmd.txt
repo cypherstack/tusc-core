@@ -1,0 +1,1 @@
+cmd='/home/bbyford/Desktop/Cypher/Tusc-Update/libraries/fc/vendor/editline/configure;--prefix=/home/bbyford/Desktop/Cypher/Tusc-Update/build/libraries/fc/vendor/editline'

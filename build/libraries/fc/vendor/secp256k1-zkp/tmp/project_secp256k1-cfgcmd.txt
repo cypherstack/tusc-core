@@ -1,0 +1,1 @@
+cmd='/home/bbyford/Desktop/Cypher/Tusc-Update/libraries/fc/vendor/secp256k1-zkp/configure;--prefix=/home/bbyford/Desktop/Cypher/Tusc-Update/build/libraries/fc/vendor/secp256k1-zkp;--with-bignum=no'

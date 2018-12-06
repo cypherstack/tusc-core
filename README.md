@@ -1,12 +1,11 @@
-BitShares Core
+TUSC Core
 ==============
 
-[BitShares Core](https://github.com/bitshares/bitshares-core) is the BitShares blockchain implementation and command-line interface.
-The web browser based wallet is [BitShares UI](https://github.com/bitshares/bitshares-ui).
+[Build Status](https://travis-ci.org/TUSCNetwork/tusc-core/branches):
 
-Visit [BitShares.org](https://bitshares.org/) to learn about BitShares and join the community at [BitSharesTalk.org](https://bitsharestalk.org/).
-
-Information for developers can be found in the [Wiki](https://github.com/bitshares/bitshares-core/wiki) and the [BitShares Developer Portal](https://dev.bitshares.works/). Users interested in how BitShares works can go to the [BitShares Documentation](https://how.bitshares.works/) site.
+`master` |
+ --- |
+ [![](https://travis-ci.org/TUSCNetwork/tusc-core.svg?branch=master)](https://travis-ci.org/TUSCNetwork/tusc-core) 
 
 Visit [Awesome BitShares](https://github.com/bitshares/awesome-bitshares) to find more resources and links E.G. chat groups, client libraries and extended APIs.
 
@@ -17,20 +16,18 @@ Visit [Awesome BitShares](https://github.com/bitshares/awesome-bitshares) to fin
 * [FAQ](#faq)
 * [License](#license)
 
-|Branch|Build Status|
-|---|---|
-|`master`|[![](https://github.com/bitshares/bitshares-core/workflows/macOS/badge.svg?branch=master)](https://github.com/bitshares/bitshares-core/actions?query=workflow%3A"macOS"+branch%3Amaster) [![](https://github.com/bitshares/bitshares-core/workflows/Ubuntu%20Debug/badge.svg?branch=master)](https://github.com/bitshares/bitshares-core/actions?query=workflow%3A"Ubuntu+Debug"+branch%3Amaster) [![](https://github.com/bitshares/bitshares-core/workflows/Ubuntu%20Release/badge.svg?branch=master)](https://github.com/bitshares/bitshares-core/actions?query=workflow%3A"Ubuntu+Release"+branch%3Amaster) [![](https://github.com/bitshares/bitshares-core/workflows/Windows%20MinGW64/badge.svg?branch=master)](https://github.com/bitshares/bitshares-core/actions?query=workflow%3A"Windows+MinGW64"+branch%3Amaster)|
-|`develop`|[![](https://github.com/bitshares/bitshares-core/workflows/macOS/badge.svg?branch=develop)](https://github.com/bitshares/bitshares-core/actions?query=workflow%3A"macOS"+branch%3Adevelop) [![](https://github.com/bitshares/bitshares-core/workflows/Ubuntu%20Debug/badge.svg?branch=develop)](https://github.com/bitshares/bitshares-core/actions?query=workflow%3A"Ubuntu+Debug"+branch%3Adevelop) [![](https://github.com/bitshares/bitshares-core/workflows/Ubuntu%20Release/badge.svg?branch=develop)](https://github.com/bitshares/bitshares-core/actions?query=workflow%3A"Ubuntu+Release"+branch%3Adevelop) [![](https://github.com/bitshares/bitshares-core/workflows/Windows%20MinGW64/badge.svg?branch=develop)](https://github.com/bitshares/bitshares-core/actions?query=workflow%3A"Windows+MinGW64"+branch%3Adevelop)|
-|`hardfork`|[![](https://github.com/bitshares/bitshares-core/workflows/macOS/badge.svg?branch=hardfork)](https://github.com/bitshares/bitshares-core/actions?query=workflow%3A"macOS"+branch%3Ahardfork) [![](https://github.com/bitshares/bitshares-core/workflows/Ubuntu%20Debug/badge.svg?branch=hardfork)](https://github.com/bitshares/bitshares-core/actions?query=workflow%3A"Ubuntu+Debug"+branch%3Ahardfork) [![](https://github.com/bitshares/bitshares-core/workflows/Ubuntu%20Release/badge.svg?branch=hardfork)](https://github.com/bitshares/bitshares-core/actions?query=workflow%3A"Ubuntu+Release"+branch%3Ahardfork) [![](https://github.com/bitshares/bitshares-core/workflows/Windows%20MinGW64/badge.svg?branch=hardfork)](https://github.com/bitshares/bitshares-core/actions?query=workflow%3A"Windows+MinGW64"+branch%3Ahardfork)|
-|`testnet`|[![](https://github.com/bitshares/bitshares-core/workflows/macOS/badge.svg?branch=testnet)](https://github.com/bitshares/bitshares-core/actions?query=workflow%3A"macOS"+branch%3Atestnet) [![](https://github.com/bitshares/bitshares-core/workflows/Ubuntu%20Debug/badge.svg?branch=testnet)](https://github.com/bitshares/bitshares-core/actions?query=workflow%3A"Ubuntu+Debug"+branch%3Atestnet) [![](https://github.com/bitshares/bitshares-core/workflows/Ubuntu%20Release/badge.svg?branch=testnet)](https://github.com/bitshares/bitshares-core/actions?query=workflow%3A"Ubuntu+Release"+branch%3Atestnet) [![](https://github.com/bitshares/bitshares-core/workflows/Windows%20MinGW64/badge.svg?branch=testnet)](https://github.com/bitshares/bitshares-core/actions?query=workflow%3A"Windows+MinGW64"+branch%3Atestnet)|
-|`master` of `bitshares-fc`|[![](https://github.com/bitshares/bitshares-fc/workflows/macOS/badge.svg?branch=master)](https://github.com/bitshares/bitshares-fc/actions?query=workflow%3A"macOS"+branch%3Amaster) [![](https://github.com/bitshares/bitshares-fc/workflows/Ubuntu%20Debug/badge.svg?branch=master)](https://github.com/bitshares/bitshares-fc/actions?query=workflow%3A"Ubuntu+Debug"+branch%3Amaster) [![](https://github.com/bitshares/bitshares-fc/workflows/Ubuntu%20Release/badge.svg?branch=master)](https://github.com/bitshares/bitshares-fc/actions?query=workflow%3A"Ubuntu+Release"+branch%3Amaster)|
+TUSC Core is the TUSC blockchain implementation and command-line interface.
+The web wallet is [TUSC UI](https://github.com/TUSCNetwork/tusc-ui).
+
+TUSC is based off of BitShares.
+Visit [BitShares.org](https://bitshares.org/) to learn about BitShares and join the community at [BitSharesTalk.org](https://bitsharestalk.org/).
+
+Information for developers can be found in the [Bitshares Developer Portal](https://dev.bitshares.works/). Users interested in how bitshares works can go to the [BitShares Documentation](https://how.bitshares.works/) site.
 
 Getting Started
 ---------------
 Build instructions and additional documentation are available in the
-[Wiki](https://github.com/bitshares/bitshares-core/wiki).
-
-Prebuilt binaries can be found in the [releases page](https://github.com/bitshares/bitshares-core/releases) for download.
+[wiki](https://github.com/TUSCNetwork/tusc-core/wiki).
 
 ### Build
 
@@ -43,8 +40,8 @@ We recommend building on Ubuntu 20.04 LTS (64-bit)
 
 **Build Script:**
 
-    git clone https://github.com/bitshares/bitshares-core.git
-    cd bitshares-core
+    git clone https://github.com/TUSCNetwork/tusc-core.git
+    cd tusc-core
     git checkout master # may substitute "master" with current release tag
     git submodule update --init --recursive
     mkdir build
@@ -54,7 +51,7 @@ We recommend building on Ubuntu 20.04 LTS (64-bit)
 
 **Upgrade Script:** (prepend to the Build Script above if you built a prior release):
 
-    git remote set-url origin https://github.com/bitshares/bitshares-core.git
+    git remote set-url origin https://github.com/TUSCNetwork/tusc-core.git
     git checkout master
     git remote set-head origin --auto
     git pull
@@ -62,24 +59,15 @@ We recommend building on Ubuntu 20.04 LTS (64-bit)
     git submodule sync --recursive
     git submodule update --init --recursive
 
-**NOTE:**
+**NOTE:** TUSC requires a [Boost](http://www.boost.org/) version in the range [1.57 - 1.65.1]. Versions earlier than
+1.57 or newer than 1.65.1 are NOT supported. If your system's Boost version is newer, then you will need to manually build
+an older version of Boost and specify it to CMake using `DBOOST_ROOT`.
 
-* BitShares requires a 64-bit operating system to build, and will not build on a 32-bit OS. Tested operating systems:
-  * Linux (heavily tested with Ubuntu LTS releases)
-  * macOS (various versions)
-  * Windows (various versions, Visual Studio and MinGW)
-  * OpenBSD (various versions)
+**NOTE:** TUSC requires a 64-bit operating system to build, and will not build on a 32-bit OS.
 
-* BitShares requires [Boost](https://www.boost.org/) libraries to build, supports version `1.58` to `1.74`.
-Newer versions may work, but have not been tested.
-If your system came pre-installed with a version of Boost libraries that you do not wish to use, you may
-manually build your preferred version and use it with BitShares by specifying it on the CMake command line.
+**NOTE:** TUSC now supports Ubuntu 18.04 LTS
 
-  Example: `cmake -DBOOST_ROOT=/path/to/boost ..`
-
-* BitShares requires [OpenSSL](https://www.openssl.org/) libraries to build, supports version `1.0.2` to `1.1.1`.
-If your system came pre-installed with a version of OpenSSL libraries that you do not wish to use, you may
-manually build your preferred version and use it with BitShares by specifying it on the CMake command line.
+**NOTE:** TUSC now supports OpenSSL 1.1.0
 
   Example: `cmake -DOPENSSL_ROOT_DIR=/path/to/openssl ..`
 
@@ -96,8 +84,8 @@ It may take several hours to fully synchronize the blockchain.
 
 You can exit the node using `Ctrl+C`. Please be aware that the node may need some time (usually a few minutes) to exit cleanly, please be patient.
 
-**IMPORTANT:** By default the node will start in reduced memory mode by using some of the commands detailed in [Memory reduction for nodes](https://github.com/bitshares/bitshares-core/wiki/Memory-reduction-for-nodes).
-In order to run a full node with all the account histories (which is usually not necessary) you need to remove `partial-operations` and `max-ops-per-account` from your config file. Please note that currently(2018-10-17) a full node will need more than 160GB of RAM to operate and required memory is growing fast. Consider the following table as **minimal requirements** before running a node:
+**IMPORTANT:** By default the witness node will start in reduced memory mode by using some of the commands detailed in [Memory reduction for nodes](https://github.com/TUSCNetwork/tusc-core/wiki/Memory-Reduction-for-Nodes).
+In order to run a full node with all the account history you need to remove `partial-operations` and `max-ops-per-account` from your config file. Please note that currently(2018-10-17) a full node will need more than 160GB of RAM to operate and required memory is growing fast. Consider the following table as minimal requirements before running a node:
 
 | Default | Full | Minimal  | ElasticSearch
 | --- | --- | --- | ---
@@ -185,20 +173,12 @@ You can run the program with `--help` parameter to see more info:
 
 There is also some info in the [Wiki](https://github.com/bitshares/bitshares-core/wiki/CLI-Wallet-Cookbook).
 
+Use `help` to see all available wallet commands. Source definition and listing of all commands is available
+[here](https://github.com/TUSCNetwork/tusc-core/blob/master/libraries/wallet/include/graphene/wallet/wallet.hpp).
 
 Support
 -------
-
-Technical support is available in the [BitSharesTalk technical support subforum](https://bitsharestalk.org/index.php?board=45.0).
-
-BitShares Core bugs can be reported directly to the [issue tracker](https://github.com/bitshares/bitshares-core/issues).
-
-Questions can be posted in [Github Discussions](https://github.com/bitshares/bitshares-core/discussions).
-
-BitShares UI bugs should be reported to the [UI issue tracker](https://github.com/bitshares/bitshares-ui/issues).
-
-Up to date online Doxygen documentation can be found at [Doxygen.BitShares.org](https://doxygen.bitshares.org/hierarchy.html).
-
+TBD
 
 Using the API
 -------------
@@ -299,13 +279,11 @@ With the above configuration, here is an example of how to call `add_node` from 
 
 Note, the call to `network_node` is necessary to obtain the correct API identifier for the network API.  It is not guaranteed that the network API identifier will always be `2`.
 
-The restricted API's are accessible via HTTP too using *basic access authentication*. E.G.
+Since the `network_node` API requires login, it is only accessible over the websocket RPC.  
 
-    $ curl --data '{"jsonrpc": "2.0", "method": "call", "params": ["network_node", "add_node", ["127.0.0.1:9090"]], "id": 1}' http://bytemaster:supersecret@127.0.0.1:8090/
-
-Our `doxygen` documentation contains the most up-to-date information
-about API's for the [node](https://doxygen.bitshares.org/namespacegraphene_1_1app.html) and the
-[wallet](https://doxygen.bitshares.org/classgraphene_1_1wallet_1_1wallet__api.html).
+Documentation
+---
+TBD
 
 
 FAQ
@@ -344,9 +322,8 @@ FAQ
     purposes, such as optimization or internal bookkeeping.
 
     The second number specifies the *type*.  The type of the object determines what fields it has.  For a
-    complete list of type ID's, see `GRAPHENE_DEFINE_IDS(protocol, protocol_ids ...)` in
-    [protocol/types.hpp](https://github.com/bitshares/bitshares-core/blob/master/libraries/protocol/include/graphene/protocol/types.hpp)
-    and `GRAPHENE_DEFINE_IDS(chain, implementation_ids ...)` in [chain/types.hpp](https://github.com/bitshares/bitshares-core/blob/master/libraries/chain/include/graphene/chain/types.hpp).
+    complete list of type ID's, see `enum object_type` and `enum impl_object_type` in
+    [types.hpp](https://github.com/TUSCNetwork/tusc-core/blob/master/libraries/chain/include/graphene/chain/protocol/types.hpp).
 
     The third number specifies the *instance*.  The instance of the object is different for each individual
     object.
@@ -359,7 +336,7 @@ FAQ
     do not).
 
     All asset ID's are of the form `1.3.x`.  If you were the 29th asset to be registered,
-    your asset's ID will be `1.3.29`.  Asset `0` is special (it's BTS, which is considered the "core asset").
+    your asset's ID will be `1.3.29`.  Asset `0` is special (it's TUSC, which is considered the "core asset").
 
     The first and second number together identify the kind of thing you're talking about (`1.2` for accounts,
     `1.3` for assets).  The third number identifies the particular thing.
@@ -379,5 +356,5 @@ FAQ
 
 License
 -------
-BitShares Core is under the MIT license. See [LICENSE](https://github.com/bitshares/bitshares-core/blob/master/LICENSE.txt)
+TUSC Core is under the MIT license. See [LICENSE](https://github.com/TUSCNetwork/tusc-core/blob/master/LICENSE.txt)
 for more information.
