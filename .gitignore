@@ -9,6 +9,8 @@ compile_commands.json
 moc_*
 *.moc
 
+build/*
+
 genesis.json
 hardfork.hpp
 
@@ -54,3 +56,8 @@ object_database/*
 *.pyo
 
 .vscode/*
+.idea/*
+*.cnf
+*.vcxproj
+*.filters
+*.sln
