@@ -196,9 +196,14 @@ void_result call_order_update_evaluator::do_evaluate(const call_order_update_ope
    /***
     * There are instances of assets exceeding max_supply before hf 1465, therefore this code must remain.
     */
-   if (next_maintenance_time > HARDFORK_CORE_1465_TIME)
+   if (next_maintenance_time <= SOFTFORK_CORE_1465_TIME)
    {
-      FC_ASSERT( _dynamic_data_obj->current_supply + o.delta_debt.amount <= _debt_asset->options.max_supply,
+      if ( _dynamic_data_obj->current_supply + o.delta_debt.amount > _debt_asset->options.initial_max_supply )
+         ilog("Issue 1465... Borrowing and exceeding MAX_SUPPLY. Will be corrected at hardfork time.");
+   }
+   else
+   {
+      FC_ASSERT( _dynamic_data_obj->current_supply + o.delta_debt.amount <= _debt_asset->options.initial_max_supply,
             "Borrowing this quantity would exceed MAX_SUPPLY" );
    }
    

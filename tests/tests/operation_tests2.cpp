@@ -1171,7 +1171,7 @@ BOOST_AUTO_TEST_CASE( worker_pay_test )
    {
       asset_reserve_operation op;
       op.payer = account_id_type();
-      op.amount_to_reserve = asset(GRAPHENE_MAX_SHARE_SUPPLY/2);
+      op.amount_to_reserve = asset(GRAPHENE_INITIAL_MAX_SHARE_SUPPLY/2);
       trx.operations.push_back(op);
       PUSH_TX( db, trx, ~0 );
       trx.clear();
@@ -1284,7 +1284,7 @@ BOOST_AUTO_TEST_CASE( refund_worker_test )
    {
       asset_reserve_operation op;
       op.payer = account_id_type();
-      op.amount_to_reserve = asset(GRAPHENE_MAX_SHARE_SUPPLY/2);
+      op.amount_to_reserve = asset(GRAPHENE_INITIAL_MAX_SHARE_SUPPLY/2);
       trx.operations.push_back(op);
       PUSH_TX( db, trx, ~0 );
       trx.clear();
@@ -1358,7 +1358,7 @@ BOOST_AUTO_TEST_CASE( burn_worker_test )
       // refund some asset to fill up the pool
       asset_reserve_operation op;
       op.payer = account_id_type();
-      op.amount_to_reserve = asset(GRAPHENE_MAX_SHARE_SUPPLY/2);
+      op.amount_to_reserve = asset(GRAPHENE_INITIAL_MAX_SHARE_SUPPLY/2);
       trx.operations.push_back(op);
       PUSH_TX( db, trx, ~0 );
       trx.clear();

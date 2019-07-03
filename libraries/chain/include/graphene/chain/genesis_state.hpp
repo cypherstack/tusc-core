@@ -66,7 +66,7 @@ struct genesis_state_type {
       string description;
       uint8_t precision = GRAPHENE_BLOCKCHAIN_PRECISION_DIGITS;
 
-      share_type max_supply;
+      share_type initial_max_supply;
       share_type accumulated_fees;
 
       bool is_bitasset = false;
@@ -101,7 +101,7 @@ struct genesis_state_type {
    };
 
    time_point_sec                           initial_timestamp;
-   share_type                               max_core_supply = GRAPHENE_MAX_SHARE_SUPPLY;
+   share_type                               initial_max_core_supply = GRAPHENE_INITIAL_MAX_SHARE_SUPPLY;
    chain_parameters                         initial_parameters;
    immutable_chain_parameters               immutable_parameters;
    vector<initial_account_type>             initial_accounts;
@@ -124,6 +124,14 @@ struct genesis_state_type {
     * This is the SHA256 serialization of the genesis_state.
     */
    chain_id_type compute_chain_id() const;
+};
+
+} } // namespace graphene::chain
+
+FC_REFLECT(graphene::chain::genesis_state_type::initial_account_type, (name)(owner_key)(active_key)(is_lifetime_member))
+
+FC_REFLECT(graphene::chain::genesis_state_type::initial_asset_type,
+           (symbol)(issuer_name)(description)(precision)(initial_max_supply)(accumulated_fees)(accumulated_fees_for_marketing_partner)(is_bitasset)(collateral_records))
 
    /// Method to override initial witness signing keys for debug
    void override_witness_signing_keys( const std::string& new_key );
@@ -132,7 +140,7 @@ struct genesis_state_type {
 
 } } // namespace graphene::chain
 
-FC_REFLECT_TYPENAME( graphene::chain::genesis_state_type::initial_account_type )
+/*FC_REFLECT_TYPENAME( graphene::chain::genesis_state_type::initial_account_type )
 FC_REFLECT_TYPENAME( graphene::chain::genesis_state_type::initial_asset_type )
 FC_REFLECT_TYPENAME( graphene::chain::genesis_state_type::initial_asset_type::initial_collateral_position )
 FC_REFLECT_TYPENAME( graphene::chain::genesis_state_type::initial_balance_type )
@@ -150,4 +158,11 @@ GRAPHENE_DECLARE_EXTERNAL_SERIALIZATION( graphene::chain::genesis_state_type::in
 GRAPHENE_DECLARE_EXTERNAL_SERIALIZATION( graphene::chain::genesis_state_type::initial_witness_type )
 GRAPHENE_DECLARE_EXTERNAL_SERIALIZATION( graphene::chain::genesis_state_type::initial_committee_member_type )
 GRAPHENE_DECLARE_EXTERNAL_SERIALIZATION( graphene::chain::genesis_state_type::initial_worker_type )
-GRAPHENE_DECLARE_EXTERNAL_SERIALIZATION( graphene::chain::genesis_state_type )
+GRAPHENE_DECLARE_EXTERNAL_SERIALIZATION( graphene::chain::genesis_state_type )*/
+FC_REFLECT(graphene::chain::genesis_state_type,
+           (initial_timestamp)(initial_max_core_supply)(initial_parameters)(initial_accounts)(initial_assets)(initial_balances)
+           (initial_vesting_balances)(initial_active_witnesses)(initial_witness_candidates)
+           (initial_committee_candidates)(initial_worker_candidates)
+           (initial_chain_id)
+           (immutable_parameters)
+           (initial_marketing_partner_account_name))

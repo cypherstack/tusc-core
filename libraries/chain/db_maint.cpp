@@ -74,6 +74,39 @@ vector<std::reference_wrapper<const typename Index::object_type>> database::sort
    return refs;
 }
 
+void database::handle_core_inflation()
+{
+   const global_property_object& gpo = get_global_properties();
+   
+   if (gpo.parameters.core_inflation_amount > 0) 
+   {
+      const asset_dynamic_data_object& core_dd = get_core_dynamic_data();
+      modify( core_dd, [gpo](asset_dynamic_data_object& addo) {
+         addo.current_max_supply += gpo.parameters.core_inflation_amount;
+      });
+   }
+}
+
+/*void database::handle_marketing_fees()
+{
+   const global_property_object& gpo = get_global_properties();
+   if (gpo.marketing_partner_account_name != "" ) 
+   {
+      auto& acnt_indx = get_index_type<account_index>();
+      auto marketing_partner_itr = acnt_indx.indices().get<by_name>().find( gpo.marketing_partner_account_name );
+      if ( marketing_partner_itr != acnt_indx.indices().get<by_name>().end() )
+      {
+         // Found current marketing partner account.
+         // Now give the marketing partner all the accumulated fees for them and zero it out on the db
+         const asset_dynamic_data_object& core_dd = get_core_dynamic_data();
+         adjust_balance(marketing_partner_itr->id,  asset(core_dd.accumulated_fees_for_marketing_partner, asset_id_type()));
+         modify( core_dd, [](asset_dynamic_data_object& addo) {
+            addo.accumulated_fees_for_marketing_partner = 0;
+         });
+      }
+   }
+}
+*/
 template<class Type>
 void database::perform_account_maintenance(Type tally_helper)
 {
@@ -477,10 +510,10 @@ void database::process_budget()
       //
       assert( gpo.parameters.block_interval > 0 );
       uint64_t blocks_to_maint = (uint64_t(time_to_maint) + gpo.parameters.block_interval - 1) / gpo.parameters.block_interval;
-
+      // blocks_to_maint = number of blocks in previous maintenance cycle
       // blocks_to_maint > 0 because time_to_maint > 0,
       // which means numerator is at least equal to block_interval
-
+      
       budget_record rec;
       initialize_budget_record( now, rec );
       share_type available_funds = rec.total_budget;
@@ -947,10 +980,7 @@ void database::process_bitassets()
 }
 
 /****
- * @brief a one-time data process to correct max_supply
- * 
- * NOTE: while exceeding max_supply happened in mainnet, it seemed to have corrected
- * itself before HF 1465. But this method must remain to correct some assets in testnet
+ * @brief a one-time data process to correct initial_max_supply
  */
 void process_hf_1465( database& db )
 {
@@ -960,15 +990,15 @@ void process_hf_1465( database& db )
    {
       const auto& current_asset = *asset_itr;
       graphene::chain::share_type current_supply = current_asset.dynamic_data(db).current_supply;
-      graphene::chain::share_type max_supply = current_asset.options.max_supply;
-      if (current_supply > max_supply && max_supply != GRAPHENE_MAX_SHARE_SUPPLY)
+      graphene::chain::share_type max_supply = current_asset.options.initial_max_supply;
+      if (current_supply > max_supply && max_supply != GRAPHENE_INITIAL_MAX_SHARE_SUPPLY)
       {
          wlog( "Adjusting max_supply of ${asset} because current_supply (${current_supply}) is greater than ${old}.", 
                ("asset", current_asset.symbol) 
                ("current_supply", current_supply.value)
                ("old", max_supply));
          db.modify<asset_object>( current_asset, [current_supply](asset_object& obj) {
-            obj.options.max_supply = graphene::chain::share_type(std::min(current_supply.value, GRAPHENE_MAX_SHARE_SUPPLY));
+            obj.options.initial_max_supply = graphene::chain::share_type(std::min(current_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY));
          });
       }
    }
@@ -1445,6 +1475,9 @@ void database::perform_chain_maintenance(const signed_block& next_block, const g
       }
    }
 
+   // Handle hard forks here
+   // TODO: remove BitShares specific hardforks.
+
    if( (dgpo.next_maintenance_time < HARDFORK_613_TIME) && (next_maintenance_time >= HARDFORK_613_TIME) )
       deprecate_annual_members(*this);
 
@@ -1462,19 +1495,7 @@ void database::perform_chain_maintenance(const signed_block& next_block, const g
    if( (dgpo.next_maintenance_time <= HARDFORK_CORE_1270_TIME) && (next_maintenance_time > HARDFORK_CORE_1270_TIME) )
       to_update_and_match_call_orders_for_hf_1270 = true;
 
-   // make sure current_supply is less than or equal to max_supply
-   if ( dgpo.next_maintenance_time <= HARDFORK_CORE_1465_TIME && next_maintenance_time > HARDFORK_CORE_1465_TIME )
-      process_hf_1465(*this);
-
-   // Fix supply issue
-   if ( dgpo.next_maintenance_time <= HARDFORK_CORE_2103_TIME && next_maintenance_time > HARDFORK_CORE_2103_TIME )
-      process_hf_2103(*this);
-
-   // Update tickets. Note: the new values will take effect only on the next maintenance interval
-   if ( dgpo.next_maintenance_time <= HARDFORK_CORE_2262_TIME && next_maintenance_time > HARDFORK_CORE_2262_TIME )
-      process_hf_2262(*this);
-
-   modify(dgpo, [last_vote_tally_time, next_maintenance_time](dynamic_global_property_object& d) {
+   modify(dgpo, [next_maintenance_time](dynamic_global_property_object& d) {
       d.next_maintenance_time = next_maintenance_time;
       d.last_vote_tally_time = last_vote_tally_time;
       d.accounts_registered_this_interval = 0;

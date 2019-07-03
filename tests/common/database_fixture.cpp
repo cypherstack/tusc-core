@@ -171,7 +171,7 @@ void database_fixture_base::init_genesis( database_fixture_base& fixture )
    init_mpa1.issuer_name = "committee-account";
    init_mpa1.description = "Initial MPA";
    init_mpa1.precision = 4;
-   init_mpa1.max_supply = GRAPHENE_MAX_SHARE_SUPPLY;
+   init_mpa1.initial_max_supply = GRAPHENE_INITIAL_MAX_SHARE_SUPPLY;
    init_mpa1.accumulated_fees = 0;
    init_mpa1.is_bitasset = true;
    fixture.genesis_state.initial_assets.push_back( init_mpa1 );
@@ -722,7 +722,7 @@ asset_create_operation database_fixture_base::make_bitasset(
    creator.issuer = issuer;
    creator.fee = asset();
    creator.symbol = name;
-   creator.common_options.max_supply = max_supply;
+   creator.common_options.initial_max_supply = initial_max_supply;
    creator.precision = precision;
    creator.common_options.market_fee_percent = market_fee_percent;
    if( issuer == GRAPHENE_WITNESS_ACCOUNT )
@@ -773,7 +773,7 @@ const asset_object& database_fixture_base::create_prediction_market(
    creator.issuer = issuer;
    creator.fee = asset();
    creator.symbol = name;
-   creator.common_options.max_supply = GRAPHENE_MAX_SHARE_SUPPLY;
+   creator.common_options.initial_max_supply = GRAPHENE_INITIAL_MAX_SHARE_SUPPLY;
    creator.precision = precision;
    creator.common_options.market_fee_percent = market_fee_percent;
    creator.common_options.issuer_permissions = flags | global_settle;
@@ -799,10 +799,10 @@ const asset_object& database_fixture_base::create_user_issued_asset( const strin
    creator.issuer = account_id_type();
    creator.fee = asset();
    creator.symbol = name;
-   creator.common_options.max_supply = 0;
+   creator.common_options.initial_max_supply = 0;
    creator.precision = 2;
    creator.common_options.core_exchange_rate = price(asset(1,asset_id_type(1)),asset(1));
-   creator.common_options.max_supply = GRAPHENE_MAX_SHARE_SUPPLY;
+   creator.common_options.initial_max_supply = GRAPHENE_INITIAL_MAX_SHARE_SUPPLY;
    creator.common_options.flags = charge_market_fee;
    creator.common_options.issuer_permissions = charge_market_fee;
    trx.operations.clear();
@@ -822,10 +822,10 @@ const asset_object& database_fixture_base::create_user_issued_asset( const strin
    creator.issuer = issuer.id;
    creator.fee = asset();
    creator.symbol = name;
-   creator.common_options.max_supply = 0;
+   creator.common_options.initial_max_supply = 0;
    creator.precision = precision;
    creator.common_options.core_exchange_rate = core_exchange_rate;
-   creator.common_options.max_supply = GRAPHENE_MAX_SHARE_SUPPLY;
+   creator.common_options.initial_max_supply = GRAPHENE_INITIAL_MAX_SHARE_SUPPLY;
    creator.common_options.flags = flags;
    creator.common_options.issuer_permissions = flags;
    creator.common_options.market_fee_percent = market_fee_percent;

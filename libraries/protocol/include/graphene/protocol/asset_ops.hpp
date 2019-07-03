@@ -45,9 +45,8 @@ namespace graphene { namespace protocol {
     * @note Changes to this struct will break protocol compatibility
     */
    struct asset_options {
-      /// The maximum supply of this asset which may exist at any given time. This can be as large as
-      /// GRAPHENE_MAX_SHARE_SUPPLY
-      share_type max_supply = GRAPHENE_MAX_SHARE_SUPPLY;
+      /// The initial maximum supply of this asset which may exist at any given time.
+      share_type initial_max_supply = GRAPHENE_INITIAL_MAX_SHARE_SUPPLY;
       /// When this asset is traded on the markets, this percentage of the total traded will be exacted and paid
       /// to the issuer. This is a fixed point value, representing hundredths of a percent, i.e. a value of 100
       /// in this field means a 1% fee is charged on market trades of this asset.
@@ -55,7 +54,7 @@ namespace graphene { namespace protocol {
       // After BSIP81 activation, market_fee_percent is the maker fee
       uint16_t market_fee_percent = 0;
       /// Market fees calculated as @ref market_fee_percent of the traded volume are capped to this value
-      share_type max_market_fee = GRAPHENE_MAX_SHARE_SUPPLY;
+      share_type max_market_fee = GRAPHENE_INITIAL_MAX_SHARE_SUPPLY;
 
       /// The flags which the issuer has permission to update. See @ref asset_issuer_permission_flags
       uint16_t issuer_permissions = DEFAULT_UIA_ASSET_ISSUER_PERMISSION;
