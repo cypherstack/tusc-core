@@ -335,6 +335,7 @@
         "network_percent_of_fee": 2000,
         "reserve_percent_of_fee": 2000,
         "witness_pay_per_block": 150000,
+        "core_inflation_amount": 0,
         "worker_budget_per_day": "50000000000"
     },
     "initial_timestamp": "2015-10-13T13:00:00",
