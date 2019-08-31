@@ -74,6 +74,46 @@ vector<std::reference_wrapper<const typename Index::object_type>> database::sort
    return refs;
 }
 
+template<class Index>
+vector<std::reference_wrapper<const typename Index::object_type>> database::sort_standby_objects(size_t count) const
+{
+   using ObjectType = typename Index::object_type;
+   const auto& all_objects = get_index_type<Index>().indices();
+   size_t active_wit_count = count;
+   size_t total_wit_count = 100;
+   size_t all_object_count = all_objects.size();
+   count = std::min(total_wit_count, all_object_count);
+   vector<std::reference_wrapper<const ObjectType>> refs;
+
+   if(all_objects.size() <= active_wit_count){
+      refs.reserve(0);
+      return refs;
+   }
+   
+   refs.reserve(all_objects.size());
+   std::transform(all_objects.begin(), all_objects.end(),
+                  std::back_inserter(refs),
+                  [](const ObjectType& o) { return std::cref(o); });
+   std::partial_sort(refs.begin(), refs.begin() + count, refs.end(),
+                   [this](const ObjectType& a, const ObjectType& b)->bool {
+      share_type oa_vote = _vote_tally_buffer[a.vote_id];
+      share_type ob_vote = _vote_tally_buffer[b.vote_id];
+      if( oa_vote != ob_vote )
+         return oa_vote > ob_vote;
+      return a.vote_id < b.vote_id;
+   });
+
+   refs.resize(count, refs.front());
+
+   auto first = refs.begin() + active_wit_count + 1;
+   auto last = refs.begin() + count;
+   vector<std::reference_wrapper<const ObjectType>> standby_wits;
+   standby_wits.reserve(count - active_wit_count);
+   std::copy(first, last, standby_wits.begin());
+
+   return standby_wits;
+}
+
 void database::handle_core_inflation()
 {
    const global_property_object& gpo = get_global_properties();
