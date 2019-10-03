@@ -468,6 +468,7 @@ void database::initialize_budget_record( fc::time_point_sec now, budget_record& 
    // at the BEGINNING of the maintenance interval.
    reserve += dpo.witness_budget;
 
+<<<<<<< HEAD
    fc::uint128_t budget_u128 = reserve.value;
    budget_u128 *= uint64_t(dt);
    budget_u128 *= GRAPHENE_CORE_ASSET_CYCLE_RATE;
@@ -480,6 +481,9 @@ void database::initialize_budget_record( fc::time_point_sec now, budget_record& 
       rec.total_budget = share_type(static_cast<uint64_t>(budget_u128));
    else
       rec.total_budget = reserve;
+=======
+   rec.total_budget = reserve;
+>>>>>>> 0219b1cf... Removing budget limit based upon static core maximum
 
    return;
 }
