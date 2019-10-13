@@ -2232,28 +2232,32 @@ BOOST_AUTO_TEST_CASE( buyback )
          generate_blocks(db.get_dynamic_global_properties().next_maintenance_time);
          generate_block();
 
-         // no success because buyback has none for sale
-         BOOST_CHECK( order_id_mid(db).for_sale == 100 );
-
-         // but we can send some to buyback
-         fund( rex_id(db), asset( 100, asset_id_type() ) );
-         // no action until next maint
-         BOOST_CHECK( order_id_mid(db).for_sale == 100 );
-         generate_blocks(db.get_dynamic_global_properties().next_maintenance_time);
-         generate_block();
-
-         // partial fill, Alice now sells 90 BUYME for 900 TUSC.
-         BOOST_CHECK( order_id_mid(db).for_sale == 90 );
-
-         // TODO check burn amount
-
-         // aagh more state in trx
-         set_expiration( db, trx );  // #11
-
-         // Selling 10 BUYME for 50 TUSC, a low price.
-         limit_order_id_type order_id_low  = create_sell_order( alice_id, asset( 10, buyme_id ), asset(  50, asset_id_type() ) )->id;
-         // Selling 10 BUYME for 150 TUSC, a high price.
-         limit_order_id_type order_id_high = create_sell_order( alice_id, asset( 10, buyme_id ), asset( 150, asset_id_type() ) )->id;
+// Modified test from witness_create above
+BOOST_AUTO_TEST_CASE( reward_split_test )
+{ try {
+   // setup test account
+   ACTOR(nathan);
+   ACTOR(nathan1);
+   ACTOR(nathan2);
+   ACTOR(nathan3);
+   ACTOR(nathan4);
+   ACTOR(nathan5);
+   ACTOR(nathan6);
+   ACTOR(nathan7);
+   ACTOR(nathan8);
+   ACTOR(nathan9);
+   ACTOR(nathan10);
+   ACTOR(nathan11);
+   ACTOR(nathan12);
+   ACTOR(nathan13);
+   ACTOR(nathan14);
+   ACTOR(nathan15);
+   ACTOR(nathan16);
+   ACTOR(nathan17);
+   ACTOR(nathan18);
+   ACTOR(nathan19);
+   ACTOR(nathan20);
+   ACTOR(nathan21);
 
          fund( rex_id(db), asset( 250, asset_id_type() ) );
          generate_blocks(db.get_dynamic_global_properties().next_maintenance_time);
@@ -2263,29 +2267,180 @@ BOOST_AUTO_TEST_CASE( buyback )
          BOOST_CHECK( db.find( order_id_mid  ) != nullptr );
          BOOST_CHECK( db.find( order_id_high ) != nullptr );
 
-         // 250 CORE in rex                 90 BUYME in mid order    10 BUYME in low order
-         //  50 CORE goes to low order, buy 10 for 50 CORE
-         // 200 CORE goes to mid order, buy 20 for 200 CORE
-         //                                 70 BUYME in mid order     0 BUYME in low order
+   // create witness
+   witness_id_type nathan_witness_id = create_witness(nathan_id, nathan_private_key).id;
+   witness_id_type nathan_witness1_id = create_witness(nathan1_id, nathan1_private_key).id;
+   witness_id_type nathan_witness2_id = create_witness(nathan2_id, nathan2_private_key).id;
+   witness_id_type nathan_witness3_id = create_witness(nathan3_id, nathan3_private_key).id;
+   witness_id_type nathan_witness4_id = create_witness(nathan4_id, nathan4_private_key).id;
+   witness_id_type nathan_witness5_id = create_witness(nathan5_id, nathan5_private_key).id;
+   witness_id_type nathan_witness6_id = create_witness(nathan6_id, nathan6_private_key).id;
+   witness_id_type nathan_witness7_id = create_witness(nathan7_id, nathan7_private_key).id;
+   witness_id_type nathan_witness8_id = create_witness(nathan8_id, nathan8_private_key).id;
+   witness_id_type nathan_witness9_id = create_witness(nathan9_id, nathan9_private_key).id;
+   witness_id_type nathan_witness10_id = create_witness(nathan10_id, nathan10_private_key).id;
+   witness_id_type nathan_witness11_id = create_witness(nathan11_id, nathan11_private_key).id;
+   witness_id_type nathan_witness12_id = create_witness(nathan12_id, nathan12_private_key).id;
+   witness_id_type nathan_witness13_id = create_witness(nathan13_id, nathan13_private_key).id;
+   witness_id_type nathan_witness14_id = create_witness(nathan14_id, nathan14_private_key).id;
+   witness_id_type nathan_witness15_id = create_witness(nathan15_id, nathan15_private_key).id;
+   witness_id_type nathan_witness16_id = create_witness(nathan16_id, nathan16_private_key).id;
+   witness_id_type nathan_witness17_id = create_witness(nathan17_id, nathan17_private_key).id;
+   witness_id_type nathan_witness18_id = create_witness(nathan18_id, nathan18_private_key).id;
+   witness_id_type nathan_witness19_id = create_witness(nathan19_id, nathan19_private_key).id;
+   witness_id_type nathan_witness20_id = create_witness(nathan20_id, nathan20_private_key).id;
+   witness_id_type nathan_witness21_id = create_witness(nathan21_id, nathan21_private_key).id;
 
-         idump( (order_id_mid(db)) );
-         BOOST_CHECK( order_id_mid(db).for_sale == 70 );
-         BOOST_CHECK( order_id_high(db).for_sale == 10 );
+   // Create a vector with private key of all witnesses, will be used to activate 11 witnesses at a time
+   const vector <fc::ecc::private_key> private_keys = {
+         nathan_private_key,
+         nathan1_private_key,
+         nathan2_private_key,
+         nathan3_private_key,
+         nathan4_private_key,
+         nathan5_private_key,
+         nathan6_private_key,
+         nathan7_private_key,
+         nathan8_private_key,
+         nathan9_private_key,
+         nathan10_private_key,
+         nathan11_private_key,
+         nathan12_private_key,
+         nathan13_private_key,
+         nathan14_private_key,
+         nathan15_private_key,
+         nathan16_private_key,
+         nathan17_private_key,
+         nathan18_private_key,
+         nathan19_private_key,
+         nathan20_private_key,
+         nathan21_private_key
+   };
 
-         BOOST_CHECK( get_balance( rex_id, asset_id_type() ) == 0 );
+   // create a map with account id and witness id of the first 11 witnesses
+      const flat_map <account_id_type, witness_id_type> witness_map = {
+            {nathan_id,  nathan_witness_id},
+            {nathan1_id, nathan_witness1_id},
+            {nathan2_id, nathan_witness2_id},
+            {nathan3_id, nathan_witness3_id},
+            {nathan4_id, nathan_witness4_id},
+            {nathan5_id, nathan_witness5_id},
+            {nathan6_id, nathan_witness6_id},
+            {nathan7_id, nathan_witness7_id},
+            {nathan8_id, nathan_witness8_id},
+            {nathan9_id, nathan_witness9_id},
+            {nathan10_id, nathan_witness10_id},
+            {nathan11_id, nathan_witness11_id},
+            {nathan12_id, nathan_witness12_id},
+            {nathan13_id, nathan_witness13_id},
+            {nathan14_id, nathan_witness14_id},
+            {nathan15_id, nathan_witness15_id},
+            {nathan16_id, nathan_witness16_id},
+            {nathan17_id, nathan_witness17_id},
+            {nathan18_id, nathan_witness18_id},
+            {nathan19_id, nathan_witness19_id},
+            {nathan20_id, nathan_witness20_id},
+            {nathan21_id, nathan_witness21_id}
+      };
 
-         // clear out the books -- 700 left on mid order, 150 left on high order, so 2000 TUSC should result in 1150 left over
 
-         fund( rex_id(db), asset( 2000, asset_id_type() ) );
-         generate_blocks(db.get_dynamic_global_properties().next_maintenance_time);
+   // Give nathan some voting stake
+   transfer(committee_account, nathan_id, asset(10000000));
+   transfer(committee_account, nathan1_id, asset(10000000));
+   transfer(committee_account, nathan2_id, asset(10000000));
+   transfer(committee_account, nathan3_id, asset(10000000));
+   transfer(committee_account, nathan4_id, asset(10000000));
+   transfer(committee_account, nathan5_id, asset(10000000));
+   transfer(committee_account, nathan6_id, asset(10000000));
+   transfer(committee_account, nathan7_id, asset(10000000));
+   transfer(committee_account, nathan8_id, asset(10000000));
+   transfer(committee_account, nathan9_id, asset(10000000));
+   transfer(committee_account, nathan10_id, asset(10000000));
+   transfer(committee_account, nathan11_id, asset(10000000));
+   transfer(committee_account, nathan12_id, asset(10000000));
+   transfer(committee_account, nathan13_id, asset(10000000));
+   transfer(committee_account, nathan14_id, asset(10000000));
+   transfer(committee_account, nathan15_id, asset(10000000));
+   transfer(committee_account, nathan16_id, asset(10000000));
+   transfer(committee_account, nathan17_id, asset(10000000));
+   transfer(committee_account, nathan18_id, asset(10000000));
+   transfer(committee_account, nathan19_id, asset(10000000));
+   transfer(committee_account, nathan20_id, asset(10000000));
+   transfer(committee_account, nathan21_id, asset(9999999));
 
-         idump( (get_balance( rex_id, asset_id_type() )) );
+   // Activate all witnesses
+   // Each witness is voted with incremental stake so last witness created will be the ones with more votes
+   int c = 0;
+   for (auto l : witness_map) {
+      int stake = 100 + c + 10;
+      transfer(committee_account, l.first, asset(stake));
+      {
+         set_expiration(db, trx);
+         account_update_operation op;
+         op.account = l.first;
+         op.new_options = l.first(db).options;
+         op.new_options->votes.insert(l.second(db).vote_id);
 
-         BOOST_CHECK( get_balance( rex_id, asset_id_type() ) == 1150 );
-
-         GRAPHENE_CHECK_THROW( transfer( alice_id, rex_id, asset( 1, nono_id ) ), fc::exception );
-         // TODO: Check cancellation works for account which is TUSC-restricted
+         trx.operations.push_back(op);
+         sign(trx, private_keys.at(c));
+         PUSH_TX(db, trx);
+         trx.clear();
       }
+      ++c;
+   }
+   
+   generate_blocks(db.get_dynamic_global_properties().next_maintenance_time);
+   generate_block();
+
+   // nathan should be a witness now
+   BOOST_REQUIRE( db.find( nathan_witness_id ) );
+   
+   generate_blocks(db.get_dynamic_global_properties().next_maintenance_time);
+   const auto& witnesses = db.get_global_properties().active_witnesses;
+   const auto& standby_witnesses = db.get_global_properties().standby_witnesses;
+
+   // Because the new witnesses created were voted in, the last ones voted in
+   // become the active witnesses and all the initial witnesses get pusehd
+   // out and become standby witnesses
+   BOOST_CHECK_EQUAL(witnesses.size(), 11u);
+   BOOST_CHECK_EQUAL(witnesses.begin()[0].instance.value, nathan_witness11_id.instance.value);
+   BOOST_CHECK_EQUAL(witnesses.begin()[1].instance.value, nathan_witness12_id.instance.value);
+   BOOST_CHECK_EQUAL(witnesses.begin()[2].instance.value, nathan_witness13_id.instance.value);
+   BOOST_CHECK_EQUAL(witnesses.begin()[3].instance.value, nathan_witness14_id.instance.value);
+   BOOST_CHECK_EQUAL(witnesses.begin()[4].instance.value, nathan_witness15_id.instance.value);
+   BOOST_CHECK_EQUAL(witnesses.begin()[5].instance.value, nathan_witness16_id.instance.value);
+   BOOST_CHECK_EQUAL(witnesses.begin()[6].instance.value, nathan_witness17_id.instance.value);
+   BOOST_CHECK_EQUAL(witnesses.begin()[7].instance.value, nathan_witness18_id.instance.value);
+   BOOST_CHECK_EQUAL(witnesses.begin()[8].instance.value, nathan_witness19_id.instance.value);
+   BOOST_CHECK_EQUAL(witnesses.begin()[9].instance.value, nathan_witness20_id.instance.value);
+   BOOST_CHECK_EQUAL(witnesses.begin()[10].instance.value, nathan_witness21_id.instance.value);
+
+   BOOST_CHECK_EQUAL(standby_witnesses.size(), 21u);
+
+   // Check that new witnesses are in standby
+   BOOST_CHECK_EQUAL(standby_witnesses.begin()[0].instance.value, nathan_witness10_id.instance.value);
+   BOOST_CHECK_EQUAL(standby_witnesses.begin()[1].instance.value, nathan_witness9_id.instance.value);
+   BOOST_CHECK_EQUAL(standby_witnesses.begin()[2].instance.value, nathan_witness8_id.instance.value);
+   BOOST_CHECK_EQUAL(standby_witnesses.begin()[3].instance.value, nathan_witness7_id.instance.value);
+   BOOST_CHECK_EQUAL(standby_witnesses.begin()[4].instance.value, nathan_witness6_id.instance.value);
+   BOOST_CHECK_EQUAL(standby_witnesses.begin()[5].instance.value, nathan_witness5_id.instance.value);
+   BOOST_CHECK_EQUAL(standby_witnesses.begin()[6].instance.value, nathan_witness4_id.instance.value);
+   BOOST_CHECK_EQUAL(standby_witnesses.begin()[7].instance.value, nathan_witness3_id.instance.value);
+   BOOST_CHECK_EQUAL(standby_witnesses.begin()[8].instance.value, nathan_witness2_id.instance.value);
+   BOOST_CHECK_EQUAL(standby_witnesses.begin()[9].instance.value, nathan_witness1_id.instance.value);
+   BOOST_CHECK_EQUAL(standby_witnesses.begin()[10].instance.value, nathan_witness_id.instance.value);
+
+   // Check that initial witnesses are in standby
+   BOOST_CHECK_EQUAL(standby_witnesses.begin()[11].instance.value, 1u);
+   BOOST_CHECK_EQUAL(standby_witnesses.begin()[12].instance.value, 2u);
+   BOOST_CHECK_EQUAL(standby_witnesses.begin()[13].instance.value, 3u);
+   BOOST_CHECK_EQUAL(standby_witnesses.begin()[14].instance.value, 4u);
+   BOOST_CHECK_EQUAL(standby_witnesses.begin()[15].instance.value, 5u);
+   BOOST_CHECK_EQUAL(standby_witnesses.begin()[16].instance.value, 6u);
+   BOOST_CHECK_EQUAL(standby_witnesses.begin()[17].instance.value, 7u);
+   BOOST_CHECK_EQUAL(standby_witnesses.begin()[18].instance.value, 8u);
+   BOOST_CHECK_EQUAL(standby_witnesses.begin()[19].instance.value, 9u);
+   BOOST_CHECK_EQUAL(standby_witnesses.begin()[20].instance.value, 10u);
 
    } FC_LOG_AND_RETHROW()
 }
