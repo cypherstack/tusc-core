@@ -2442,7 +2442,72 @@ BOOST_AUTO_TEST_CASE( reward_split_test )
    BOOST_CHECK_EQUAL(standby_witnesses.begin()[19].instance.value, 9u);
    BOOST_CHECK_EQUAL(standby_witnesses.begin()[20].instance.value, 10u);
 
-   } FC_LOG_AND_RETHROW()
-}
+} FC_LOG_AND_RETHROW() }
+
+BOOST_AUTO_TEST_CASE( block_reward_split )
+{ try {
+   INVOKE(standby_witnesses);
+
+   auto schedule_maint = [&]()
+   {
+      // Do maintenance at next generated block
+      db.modify( db.get_dynamic_global_properties(), [&]( dynamic_global_property_object& _dpo )
+      {
+         _dpo.next_maintenance_time = db.head_block_time() + 1;
+      } );
+   };
+
+   db.modify( db.get_global_properties(), [&]( global_property_object& _gpo )
+   {
+      // Will exhaust the reserve.
+      _gpo.parameters.witness_pay_per_block = 1000;
+      _gpo.parameters.maintenance_interval = 100 * _gpo.parameters.block_interval;
+      _gpo.parameters.core_inflation_amount = 1000000; // this is mostly to increase the reserve
+   } );
+
+   schedule_maint();
+   generate_block();
+
+   const asset_object* core = &asset_id_type()(db);
+
+   BOOST_TEST_MESSAGE( printf("current_max_supply = %lu. current_supply = %lu, reserved = %lu  ", 
+   core->dynamic_data(db).current_max_supply.value, 
+   core->dynamic_data(db).current_supply.value, 
+   core->reserved(db).value) );
+
+
+   const auto& standby_witnesses = db.get_global_properties().standby_witnesses;
+   BOOST_CHECK_EQUAL(standby_witnesses.size(), 21u);
+
+   for (auto standby_witness : standby_witnesses) {
+      BOOST_CHECK_EQUAL(standby_witness(db).pay_vb.valid(), false);
+   }
+
+   generate_block();
+   generate_block();
+   generate_block();
+   schedule_maint();
+   generate_block();
+   
+   // 4 blocks got created, with witness pay at 1000 per block. 
+   // That means the overall funds distributed to standby witnesses should be
+   // 4000 * .2 = 800, split among 21 standbys.
+   // First standby gets 40, all others get 38.
+   for (int i = 0; i< standby_witnesses.size();i++) {
+      auto standby_witness = standby_witnesses[i];
+
+      BOOST_CHECK_EQUAL(standby_witness(db).pay_vb.valid(), true);
+      
+      if( standby_witness(db).pay_vb.valid() )
+      {
+         auto vb = (*standby_witness(db).pay_vb)(db).balance.amount.value;
+         if(i == 0){
+            BOOST_CHECK_EQUAL(vb, 40u);
+         }else{
+            BOOST_CHECK_EQUAL(vb, 38u);
+         }
+      }
+   }
+} FC_LOG_AND_RETHROW() }
 
 BOOST_AUTO_TEST_SUITE_END()
