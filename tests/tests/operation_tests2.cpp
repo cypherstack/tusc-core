@@ -2344,30 +2344,6 @@ BOOST_AUTO_TEST_CASE( reward_split_test )
       };
 
 
-   // Give nathan some voting stake
-   transfer(committee_account, nathan_id, asset(10000000));
-   transfer(committee_account, nathan1_id, asset(10000000));
-   transfer(committee_account, nathan2_id, asset(10000000));
-   transfer(committee_account, nathan3_id, asset(10000000));
-   transfer(committee_account, nathan4_id, asset(10000000));
-   transfer(committee_account, nathan5_id, asset(10000000));
-   transfer(committee_account, nathan6_id, asset(10000000));
-   transfer(committee_account, nathan7_id, asset(10000000));
-   transfer(committee_account, nathan8_id, asset(10000000));
-   transfer(committee_account, nathan9_id, asset(10000000));
-   transfer(committee_account, nathan10_id, asset(10000000));
-   transfer(committee_account, nathan11_id, asset(10000000));
-   transfer(committee_account, nathan12_id, asset(10000000));
-   transfer(committee_account, nathan13_id, asset(10000000));
-   transfer(committee_account, nathan14_id, asset(10000000));
-   transfer(committee_account, nathan15_id, asset(10000000));
-   transfer(committee_account, nathan16_id, asset(10000000));
-   transfer(committee_account, nathan17_id, asset(10000000));
-   transfer(committee_account, nathan18_id, asset(10000000));
-   transfer(committee_account, nathan19_id, asset(10000000));
-   transfer(committee_account, nathan20_id, asset(10000000));
-   transfer(committee_account, nathan21_id, asset(9999999));
-
    // Activate all witnesses
    // Each witness is voted with incremental stake so last witness created will be the ones with more votes
    int c = 0;
@@ -2392,11 +2368,33 @@ BOOST_AUTO_TEST_CASE( reward_split_test )
    generate_blocks(db.get_dynamic_global_properties().next_maintenance_time);
    generate_block();
 
+<<<<<<< HEAD
    // nathan should be a witness now
    BOOST_REQUIRE( db.find( nathan_witness_id ) );
-   
-   generate_blocks(db.get_dynamic_global_properties().next_maintenance_time);
-   const auto& witnesses = db.get_global_properties().active_witnesses;
+=======
+   // New accounts should be witnesses now
+   BOOST_REQUIRE( db.find( nathan_witness1_id ) );
+   BOOST_REQUIRE( db.find( nathan_witness2_id ) );
+   BOOST_REQUIRE( db.find( nathan_witness3_id ) );
+   BOOST_REQUIRE( db.find( nathan_witness4_id ) );
+   BOOST_REQUIRE( db.find( nathan_witness5_id ) );
+   BOOST_REQUIRE( db.find( nathan_witness6_id ) );
+   BOOST_REQUIRE( db.find( nathan_witness7_id ) );
+   BOOST_REQUIRE( db.find( nathan_witness8_id ) );
+   BOOST_REQUIRE( db.find( nathan_witness9_id ) );
+   BOOST_REQUIRE( db.find( nathan_witness10_id ) );
+   BOOST_REQUIRE( db.find( nathan_witness11_id ) );
+   BOOST_REQUIRE( db.find( nathan_witness12_id ) );
+   BOOST_REQUIRE( db.find( nathan_witness13_id ) );
+   BOOST_REQUIRE( db.find( nathan_witness14_id ) );
+   BOOST_REQUIRE( db.find( nathan_witness15_id ) );
+   BOOST_REQUIRE( db.find( nathan_witness16_id ) );
+   BOOST_REQUIRE( db.find( nathan_witness17_id ) );
+   BOOST_REQUIRE( db.find( nathan_witness18_id ) );
+   BOOST_REQUIRE( db.find( nathan_witness19_id ) );
+   BOOST_REQUIRE( db.find( nathan_witness20_id ) );
+   BOOST_REQUIRE( db.find( nathan_witness21_id ) );
+   BOOST_REQUIRE( db.find( nathan_witness22_id ) );
    const auto& standby_witnesses = db.get_global_properties().standby_witnesses;
 
    // Because the new witnesses created were voted in, the last ones voted in
@@ -2420,7 +2418,6 @@ BOOST_AUTO_TEST_CASE( reward_split_test )
    // Check that new witnesses are in standby
    BOOST_CHECK_EQUAL(standby_witnesses.begin()[0].instance.value, nathan_witness10_id.instance.value);
    BOOST_CHECK_EQUAL(standby_witnesses.begin()[1].instance.value, nathan_witness9_id.instance.value);
-   BOOST_CHECK_EQUAL(standby_witnesses.begin()[2].instance.value, nathan_witness8_id.instance.value);
    BOOST_CHECK_EQUAL(standby_witnesses.begin()[3].instance.value, nathan_witness7_id.instance.value);
    BOOST_CHECK_EQUAL(standby_witnesses.begin()[4].instance.value, nathan_witness6_id.instance.value);
    BOOST_CHECK_EQUAL(standby_witnesses.begin()[5].instance.value, nathan_witness5_id.instance.value);
@@ -2442,6 +2439,20 @@ BOOST_AUTO_TEST_CASE( reward_split_test )
    BOOST_CHECK_EQUAL(standby_witnesses.begin()[19].instance.value, 9u);
    BOOST_CHECK_EQUAL(standby_witnesses.begin()[20].instance.value, 10u);
 
+   // Make enough blocks to cause the witness schedule to rebuild so
+   // only the new witnesses will be signing blocks.
+   generate_block();
+   generate_block();
+   generate_block();
+   generate_block();
+   generate_block();
+   generate_block();
+   generate_block();
+   generate_block();
+   generate_block();
+   generate_block();
+   schedule_maint();
+   generate_block();
 } FC_LOG_AND_RETHROW() }
 
 BOOST_AUTO_TEST_CASE( block_reward_split )
@@ -2465,20 +2476,24 @@ BOOST_AUTO_TEST_CASE( block_reward_split )
       _gpo.parameters.core_inflation_amount = 1000000; // this is mostly to increase the reserve
    } );
 
+<<<<<<< HEAD
    schedule_maint();
    generate_block();
+   BOOST_CHECK_EQUAL(witnesses.size(), 11u);
 
-   const asset_object* core = &asset_id_type()(db);
-
-   BOOST_TEST_MESSAGE( printf("current_max_supply = %lu. current_supply = %lu, reserved = %lu  ", 
-   core->dynamic_data(db).current_max_supply.value, 
-   core->dynamic_data(db).current_supply.value, 
-   core->reserved(db).value) );
+   // Maintenance hasn't occurred yet so standbys should not have any vested balance
+   for (auto standby_witness : standby_witnesses) {
+      BOOST_CHECK_EQUAL(standby_witness(db).pay_vb.valid(), false);
+   }
+>>>>>>> 9d8c7aa0... Finalizing tests
 
 
    const auto& standby_witnesses = db.get_global_properties().standby_witnesses;
    BOOST_CHECK_EQUAL(standby_witnesses.size(), 21u);
 
+=======
+   // First maintenance just turned on witness pay/inflation so standbys should not have any vested balance
+>>>>>>> 9d8c7aa0... Finalizing tests
    for (auto standby_witness : standby_witnesses) {
       BOOST_CHECK_EQUAL(standby_witness(db).pay_vb.valid(), false);
    }
@@ -2488,6 +2503,7 @@ BOOST_AUTO_TEST_CASE( block_reward_split )
    generate_block();
    schedule_maint();
    generate_block();
+<<<<<<< HEAD
    
    // 4 blocks got created, with witness pay at 1000 per block. 
    // That means the overall funds distributed to standby witnesses should be
@@ -2496,17 +2512,42 @@ BOOST_AUTO_TEST_CASE( block_reward_split )
    for (int i = 0; i< standby_witnesses.size();i++) {
       auto standby_witness = standby_witnesses[i];
 
+=======
+
+   // 4 blocks got created prior to maintenance, with witness pay at 1000 per block. 
+   // That means the overall funds distributed to standby witnesses should be
+   // 4000 * .2 = 800, split among 21 standbys.
+   // First standby gets 40, all others get 38.
+         }else{
+            BOOST_CHECK_EQUAL(vb, 38u);
+         }
+      }
+<<<<<<< HEAD
+=======
+      i ++;
+
+   schedule_maint();
+   generate_block();
+
+   // 1 block got created prior to maintenance, with witness pay at 1000 per block. 
+   // That means the overall funds distributed to standby witnesses should be
+   // 1000 * .2 = 200, split among 21 standbys.
+   // First standby gets 20, all others get 9.
+   i = 0;
+   for (auto standby_witness : standby_witnesses) {
       BOOST_CHECK_EQUAL(standby_witness(db).pay_vb.valid(), true);
       
       if( standby_witness(db).pay_vb.valid() )
       {
          auto vb = (*standby_witness(db).pay_vb)(db).balance.amount.value;
          if(i == 0){
-            BOOST_CHECK_EQUAL(vb, 40u);
+            BOOST_CHECK_EQUAL(vb, 60u);
          }else{
-            BOOST_CHECK_EQUAL(vb, 38u);
+            BOOST_CHECK_EQUAL(vb, 47u);
          }
       }
+      i ++;
+>>>>>>> 9d8c7aa0... Finalizing tests
    }
 } FC_LOG_AND_RETHROW() }
 
