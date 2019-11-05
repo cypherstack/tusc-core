@@ -143,6 +143,9 @@ FC_REFLECT_DERIVED( graphene::chain::dynamic_global_property_object, (graphene::
                     (current_aslot)
                     (recent_slots_filled)
                     (dynamic_flags)
+                    (standby_witness_reward_split_fund)
+                    (marketing_partner_reward_split_fund)
+                    (network_reward_split_fund)
                     (last_irreversible_block_num)
                   )
 
