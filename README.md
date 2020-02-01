@@ -85,10 +85,11 @@ It may take several hours to fully synchronize the blockchain.
 You can exit the node using `Ctrl+C`. Please be aware that the node may need some time (usually a few minutes) to exit cleanly, please be patient.
 
 **IMPORTANT:** By default the witness node will start in reduced memory mode by using some of the commands detailed in [Memory reduction for nodes](https://github.com/TUSCNetwork/tusc-core/wiki/Memory-Reduction-for-Nodes).
-In order to run a full node with all the account history you need to remove `partial-operations` and `max-ops-per-account` from your config file. Please note that currently(2018-10-17) a full node will need more than 160GB of RAM to operate and required memory is growing fast. Consider the following table as minimal requirements before running a node:
+In order to run a full node with all the account history you need to remove `partial-operations` and `max-ops-per-account` from your config file. Consider the following table as minimal requirements before running a node:
 
 | Default | Full | Minimal  | ElasticSearch
 | --- | --- | --- | ---
+<<<<<<< HEAD
 | 150G HDD, 16G RAM | 640G SSD, 64G RAM * | 120G HDD, 4G RAM | 1TB SSD, 32G RAM
 
 \* For this setup, allocate at least 500GB of SSD as swap.
@@ -100,6 +101,9 @@ To use the command-line wallet or other wallets / clients with the node, the nod
 or configure it in the config file by editing `witness_node_data_dir/config.ini` as follows:
 
     rpc-endpoint = 127.0.0.1:8090
+=======
+| 2 cpu, 8G HDD, 4G RAM | 2 cpu, 64G HDD, 8G RAM | 2 cpu, 8G HDD, 4G RAM | 2 cpu, 128G SSD, 16G RAM
+>>>>>>> bd37cb02... Update suggested node reqs
 
 You can run the program with `--help` parameter to see more info:
 
