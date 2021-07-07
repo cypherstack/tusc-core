@@ -180,7 +180,7 @@ namespace graphene { namespace chain {
           */
          template<class DB>
          share_type reserved( const DB& db )const
-         { return options.max_supply - dynamic_data(db).current_supply; }
+         { return options.initial_max_supply - dynamic_data(db).current_supply; }
 
          /// @return true if asset can accumulate fees in the given denomination
          template<class DB>

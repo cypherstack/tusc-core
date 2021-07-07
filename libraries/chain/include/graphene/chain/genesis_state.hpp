@@ -131,7 +131,7 @@ struct genesis_state_type {
 FC_REFLECT(graphene::chain::genesis_state_type::initial_account_type, (name)(owner_key)(active_key)(is_lifetime_member))
 
 FC_REFLECT(graphene::chain::genesis_state_type::initial_asset_type,
-           (symbol)(issuer_name)(description)(precision)(initial_max_supply)(accumulated_fees)(accumulated_fees_for_marketing_partner)(is_bitasset)(collateral_records))
+           (symbol)(issuer_name)(description)(precision)(initial_max_supply)(accumulated_fees)(is_bitasset)(collateral_records))
 
    /// Method to override initial witness signing keys for debug
    void override_witness_signing_keys( const std::string& new_key );
@@ -165,4 +165,4 @@ FC_REFLECT(graphene::chain::genesis_state_type,
            (initial_committee_candidates)(initial_worker_candidates)
            (initial_chain_id)
            (immutable_parameters)
-           (initial_marketing_partner_account_name))
+           )

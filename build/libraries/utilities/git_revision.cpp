@@ -1,8 +1,8 @@
 #include <stdint.h>
 #include <graphene/utilities/git_revision.hpp>
 
-#define GRAPHENE_GIT_REVISION_SHA "49b3f1bda2ee016cdf86e033547cc430e0888bc3"
-#define GRAPHENE_GIT_REVISION_UNIX_TIMESTAMP 1625692617
+#define GRAPHENE_GIT_REVISION_SHA "ca9dd9acf1def23eb7e362a1c869721b015ebb7d"
+#define GRAPHENE_GIT_REVISION_UNIX_TIMESTAMP 1625693034
 #define GRAPHENE_GIT_REVISION_DESCRIPTION "unknown"
 
 namespace graphene { namespace utilities {

@@ -577,7 +577,7 @@ FC_REFLECT( graphene::protocol::asset_claim_pool_operation, (fee)(issuer)(asset_
 FC_REFLECT( graphene::protocol::asset_claim_pool_operation::fee_parameters_type, (fee) )
 
 FC_REFLECT( graphene::protocol::asset_options,
-            (max_supply)
+            (initial_max_supply)
             (market_fee_percent)
             (max_market_fee)
             (issuer_permissions)
