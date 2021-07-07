@@ -9,6 +9,7 @@ compile_commands.json
 moc_*
 *.moc
 
+build
 build/*
 
 genesis.json

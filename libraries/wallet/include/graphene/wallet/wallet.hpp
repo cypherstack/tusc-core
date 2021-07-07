@@ -774,7 +774,7 @@ class wallet_api
        *  returns the transaction ID (hash) along with the signed transaction.
        * @param from the name or id of the account sending the funds
        * @param to the name or id of the account receiving the funds
-       * @param amount the amount to send (in nominal units -- to send half of a BTS, specify 0.5)
+       * @param amount the amount to send (in nominal units -- to send half of a TUSC, specify 0.5)
        * @param asset_symbol_or_id the symbol or id of the asset to send
        * @param memo a memo to attach to the transaction.  The memo will be encrypted in the
        *             transaction and readable for the receiver.  There is no length limit
@@ -972,8 +972,8 @@ class wallet_api
       /** Place a limit order attempting to sell one asset for another.
        *
 <<<<<<< HEAD
-       * Buying and selling are the same operation on BitShares; if you want to buy BTS
-       * with USD, you should sell USD for BTS.
+       * Buying and selling are the same operation on BitShares; if you want to buy TUSC
+       * with USD, you should sell USD for TUSC.
 =======
        * Buying and selling are the same operation on Graphene; if you want to buy TUSC 
        * with USD, you should sell USD for TUSC.
