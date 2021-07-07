@@ -41,7 +41,7 @@ namespace detail {
       fc::uint128_t a(value.value);
       a *= percent;
       a /= GRAPHENE_100_PERCENT;
-      FC_ASSERT( a <= GRAPHENE_MAX_SHARE_SUPPLY, "overflow when calculating percent" );
+      FC_ASSERT( a <= GRAPHENE_INITIAL_MAX_SHARE_SUPPLY, "overflow when calculating percent" );
       return static_cast<int64_t>(a);
    }
 

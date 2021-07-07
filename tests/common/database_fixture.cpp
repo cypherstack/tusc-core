@@ -713,7 +713,7 @@ asset_create_operation database_fixture_base::make_bitasset(
    uint16_t flags /* = charge_market_fee */,
    uint16_t precision /* = GRAPHENE_BLOCKCHAIN_PRECISION_DIGITS */,
    asset_id_type backing_asset /* = CORE */,
-   share_type max_supply,  /* = GRAPHENE_MAX_SHARE_SUPPLY */
+   share_type initial_max_supply,  /* = GRAPHENE_INITIAL_MAX_SHARE_SUPPLY */
    optional<uint16_t> initial_cr, /* = {} */
    optional<uint16_t> margin_call_fee_ratio /* = {} */
    )
@@ -744,13 +744,13 @@ const asset_object& database_fixture_base::create_bitasset(
    uint16_t flags /* = charge_market_fee */,
    uint16_t precision /* = GRAPHENE_BLOCKCHAIN_PRECISION_DIGITS */,
    asset_id_type backing_asset /* = CORE */,
-   share_type max_supply,  /* = GRAPHENE_MAX_SHARE_SUPPLY */
+   share_type initial_max_supply,  /* = GRAPHENE_INITIAL_MAX_SHARE_SUPPLY */
    optional<uint16_t> initial_cr, /* = {} */
    optional<uint16_t> margin_call_fee_ratio /* = {} */
    )
 { try {
    asset_create_operation creator = make_bitasset( name, issuer, market_fee_percent, flags,
-                                                   precision, backing_asset, max_supply, initial_cr,
+                                                   precision, backing_asset, initial_max_supply, initial_cr,
                                                    margin_call_fee_ratio );
    trx.operations.clear();
    trx.operations.push_back(std::move(creator));

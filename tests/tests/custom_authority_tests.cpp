@@ -5536,7 +5536,7 @@ BOOST_AUTO_TEST_CASE(custom_auths) { try {
             op.common_options.max_supply = 0;
             op.precision = precision;
             op.common_options.core_exchange_rate = core_exchange_rate;
-            op.common_options.max_supply = GRAPHENE_MAX_SHARE_SUPPLY;
+            op.common_options.max_supply = GRAPHENE_INITIAL_MAX_SHARE_SUPPLY;
             op.common_options.flags = flags;
             op.common_options.issuer_permissions = flags;
             op.common_options.market_fee_percent = market_fee_percent;

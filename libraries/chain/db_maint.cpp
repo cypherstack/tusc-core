@@ -1016,13 +1016,13 @@ void process_hf_1465( database& db )
    {
       const auto& current_asset = *asset_itr;
       graphene::chain::share_type current_supply = current_asset.dynamic_data(db).current_supply;
-      graphene::chain::share_type max_supply = current_asset.options.initial_max_supply;
-      if (current_supply > max_supply && max_supply != GRAPHENE_INITIAL_MAX_SHARE_SUPPLY)
+      graphene::chain::share_type initial_max_supply = current_asset.options.initial_max_supply;
+      if (current_supply > initial_max_supply && initial_max_supply != GRAPHENE_INITIAL_MAX_SHARE_SUPPLY)
       {
-         wlog( "Adjusting max_supply of ${asset} because current_supply (${current_supply}) is greater than ${old}.", 
+         wlog( "Adjusting initial_max_supply of ${asset} because current_supply (${current_supply}) is greater than ${old}.", 
                ("asset", current_asset.symbol) 
                ("current_supply", current_supply.value)
-               ("old", max_supply));
+               ("old", initial_max_supply));
          db.modify<asset_object>( current_asset, [current_supply](asset_object& obj) {
             obj.options.initial_max_supply = graphene::chain::share_type(std::min(current_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY));
          });
