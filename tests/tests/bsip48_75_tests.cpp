@@ -398,7 +398,7 @@ BOOST_AUTO_TEST_CASE( update_max_supply )
       PUSH_TX(db, trx, ~0);
 
       BOOST_CHECK( uia_id(db).can_update_max_supply() );
-      // initial_max_supply < current_supply
+      // max_supply < current_supply
       BOOST_CHECK_EQUAL( uia_id(db).options.initial_max_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 101 );
       BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 100 );
 
@@ -416,7 +416,7 @@ BOOST_AUTO_TEST_CASE( update_max_supply )
       PUSH_TX(db, trx, ~0);
 
       BOOST_CHECK( uia_id(db).can_update_max_supply() );
-      // initial_max_supply == current_supply
+      // max_supply == current_supply
       BOOST_CHECK_EQUAL( uia_id(db).options.initial_max_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 100 );
       BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 100 );
 
@@ -428,7 +428,7 @@ BOOST_AUTO_TEST_CASE( update_max_supply )
       auop.new_options.initial_max_supply += 1;
 
       BOOST_CHECK( uia_id(db).can_update_max_supply() );
-      // initial_max_supply == current_supply
+      // max_supply == current_supply
       BOOST_CHECK_EQUAL( uia_id(db).options.initial_max_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 100 );
       BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 100 );
 
@@ -439,7 +439,7 @@ BOOST_AUTO_TEST_CASE( update_max_supply )
       PUSH_TX(db, trx, ~0);
 
       BOOST_CHECK( uia_id(db).can_update_max_supply() );
-      // initial_max_supply > current_supply
+      // max_supply > current_supply
       BOOST_CHECK_EQUAL( uia_id(db).options.initial_max_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 98 );
       BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 100 );
 
@@ -450,7 +450,7 @@ BOOST_AUTO_TEST_CASE( update_max_supply )
       PUSH_TX(db, trx, ~0);
 
       BOOST_CHECK( uia_id(db).can_update_max_supply() );
-      // initial_max_supply > current_supply
+      // max_supply > current_supply
       BOOST_CHECK_EQUAL( uia_id(db).options.initial_max_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 99 );
       BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 100 );
 
@@ -461,7 +461,7 @@ BOOST_AUTO_TEST_CASE( update_max_supply )
       PUSH_TX(db, trx, ~0);
 
       BOOST_CHECK( !uia_id(db).can_update_max_supply() );
-      // initial_max_supply > current_supply
+      // max_supply > current_supply
       BOOST_CHECK_EQUAL( uia_id(db).options.initial_max_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 99 );
       BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 100 );
 
@@ -473,7 +473,7 @@ BOOST_AUTO_TEST_CASE( update_max_supply )
       auop.new_options.initial_max_supply += 1;
 
       BOOST_CHECK( !uia_id(db).can_update_max_supply() );
-      // initial_max_supply > current_supply
+      // max_supply > current_supply
       BOOST_CHECK_EQUAL( uia_id(db).options.initial_max_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 99 );
       BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 100 );
 
@@ -484,7 +484,7 @@ BOOST_AUTO_TEST_CASE( update_max_supply )
       PUSH_TX(db, trx, ~0);
 
       BOOST_CHECK( uia_id(db).can_update_max_supply() );
-      // initial_max_supply > current_supply
+      // max_supply > current_supply
       BOOST_CHECK_EQUAL( uia_id(db).options.initial_max_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 99 );
       BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 100 );
 
@@ -495,7 +495,7 @@ BOOST_AUTO_TEST_CASE( update_max_supply )
       PUSH_TX(db, trx, ~0);
 
       BOOST_CHECK( uia_id(db).can_update_max_supply() );
-      // initial_max_supply > current_supply
+      // max_supply > current_supply
       BOOST_CHECK_EQUAL( uia_id(db).options.initial_max_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 98 );
       BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 100 );
 
@@ -508,7 +508,7 @@ BOOST_AUTO_TEST_CASE( update_max_supply )
       PUSH_TX(db, trx, ~0);
 
       BOOST_CHECK( !uia_id(db).can_update_max_supply() );
-      // initial_max_supply > current_supply
+      // max_supply > current_supply
       BOOST_CHECK_EQUAL( uia_id(db).options.initial_max_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 98 );
       BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 100 );
 
@@ -523,7 +523,7 @@ BOOST_AUTO_TEST_CASE( update_max_supply )
       auop.new_options.issuer_permissions |= lock_max_supply;
 
       BOOST_CHECK( !uia_id(db).can_update_max_supply() );
-      // initial_max_supply > current_supply
+      // max_supply > current_supply
       BOOST_CHECK_EQUAL( uia_id(db).options.initial_max_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 98 );
       BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 100 );
 
@@ -535,7 +535,7 @@ BOOST_AUTO_TEST_CASE( update_max_supply )
       auop.new_options.initial_max_supply += 1;
 
       BOOST_CHECK( !uia_id(db).can_update_max_supply() );
-      // initial_max_supply > current_supply
+      // max_supply > current_supply
       BOOST_CHECK_EQUAL( uia_id(db).options.initial_max_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 98 );
       BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 100 );
 
@@ -547,7 +547,7 @@ BOOST_AUTO_TEST_CASE( update_max_supply )
       auop.new_options.flags |= lock_max_supply;
 
       BOOST_CHECK( !uia_id(db).can_update_max_supply() );
-      // initial_max_supply > current_supply
+      // max_supply > current_supply
       BOOST_CHECK_EQUAL( uia_id(db).options.initial_max_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 98 );
       BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 100 );
 
@@ -566,7 +566,7 @@ BOOST_AUTO_TEST_CASE( update_max_supply )
       reserve_asset( sam_id, uia_id(db).amount( GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 100 ) );
 
       BOOST_CHECK( !uia_id(db).can_update_max_supply() );
-      // initial_max_supply > current_supply
+      // max_supply > current_supply
       BOOST_CHECK_EQUAL( uia_id(db).options.initial_max_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 98 );
       BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, 0 );
 
@@ -578,7 +578,7 @@ BOOST_AUTO_TEST_CASE( update_max_supply )
       auop.new_options.initial_max_supply += 1;
 
       BOOST_CHECK( !uia_id(db).can_update_max_supply() );
-      // initial_max_supply > current_supply
+      // max_supply > current_supply
       BOOST_CHECK_EQUAL( uia_id(db).options.initial_max_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 98 );
       BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, 0 );
 
@@ -590,7 +590,7 @@ BOOST_AUTO_TEST_CASE( update_max_supply )
       auop.new_options.flags |= lock_max_supply;
 
       BOOST_CHECK( !uia_id(db).can_update_max_supply() );
-      // initial_max_supply > current_supply
+      // max_supply > current_supply
       BOOST_CHECK_EQUAL( uia_id(db).options.initial_max_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 98 );
       BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, 0 );
 
@@ -601,7 +601,7 @@ BOOST_AUTO_TEST_CASE( update_max_supply )
       PUSH_TX(db, trx, ~0);
 
       BOOST_CHECK( !uia_id(db).can_update_max_supply() );
-      // initial_max_supply > current_supply
+      // max_supply > current_supply
       BOOST_CHECK_EQUAL( uia_id(db).options.initial_max_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 98 );
       BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, 0 );
 
@@ -613,7 +613,7 @@ BOOST_AUTO_TEST_CASE( update_max_supply )
       auop.new_options.initial_max_supply += 1;
 
       BOOST_CHECK( !uia_id(db).can_update_max_supply() );
-      // initial_max_supply > current_supply
+      // max_supply > current_supply
       BOOST_CHECK_EQUAL( uia_id(db).options.initial_max_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 98 );
       BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, 0 );
 
@@ -624,7 +624,7 @@ BOOST_AUTO_TEST_CASE( update_max_supply )
       PUSH_TX(db, trx, ~0);
 
       BOOST_CHECK( uia_id(db).can_update_max_supply() );
-      // initial_max_supply > current_supply
+      // max_supply > current_supply
       BOOST_CHECK_EQUAL( uia_id(db).options.initial_max_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 98 );
       BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, 0 );
 
@@ -635,7 +635,7 @@ BOOST_AUTO_TEST_CASE( update_max_supply )
       PUSH_TX(db, trx, ~0);
 
       BOOST_CHECK( uia_id(db).can_update_max_supply() );
-      // initial_max_supply > current_supply
+      // max_supply > current_supply
       BOOST_CHECK_EQUAL( uia_id(db).options.initial_max_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 99 );
       BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, 0 );
 
@@ -643,7 +643,7 @@ BOOST_AUTO_TEST_CASE( update_max_supply )
       issue_uia( sam_id, uia_id(db).amount( 100 ) );
 
       BOOST_CHECK( uia_id(db).can_update_max_supply() );
-      // initial_max_supply > current_supply
+      // max_supply > current_supply
       BOOST_CHECK_EQUAL( uia_id(db).options.initial_max_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 99 );
       BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, 100 );
 
@@ -655,7 +655,7 @@ BOOST_AUTO_TEST_CASE( update_max_supply )
 
       // still can update max supply
       BOOST_CHECK( uia_id(db).can_update_max_supply() );
-      // initial_max_supply > current_supply
+      // max_supply > current_supply
       BOOST_CHECK_EQUAL( uia_id(db).options.initial_max_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 99 );
       BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, 100 );
 
@@ -667,7 +667,7 @@ BOOST_AUTO_TEST_CASE( update_max_supply )
       auop.new_options.issuer_permissions |= lock_max_supply;
 
       BOOST_CHECK( uia_id(db).can_update_max_supply() );
-      // initial_max_supply > current_supply
+      // max_supply > current_supply
       BOOST_CHECK_EQUAL( uia_id(db).options.initial_max_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 99 );
       BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, 100 );
 
@@ -678,7 +678,7 @@ BOOST_AUTO_TEST_CASE( update_max_supply )
       PUSH_TX(db, trx, ~0);
 
       BOOST_CHECK( uia_id(db).can_update_max_supply() );
-      // initial_max_supply > current_supply
+      // max_supply > current_supply
       BOOST_CHECK_EQUAL( uia_id(db).options.initial_max_supply.value, GRAPHENE_INITIAL_MAX_SHARE_SUPPLY - 100 );
       BOOST_CHECK_EQUAL( uia_id(db).dynamic_data(db).current_supply.value, 100 );
 

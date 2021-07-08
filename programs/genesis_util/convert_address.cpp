@@ -42,10 +42,10 @@ int main( int argc, char** argv )
    for( int i=1; i<argc; i++ )
    {
       std::string arg = argv[i];
-      graphene::chain::public_key_type temp_key = graphene::chain::public_key_type(arg);
+      graphene::protocol::public_key_type temp_key = graphene::protocol::public_key_type(arg);
       
       std::cout << "Public address from public key: \n";  
-      std::cout << std::string( graphene::chain::address( temp_key ));
+      std::cout << std::string( graphene::protocol::address( temp_key ));
       std::cout << "\n";  
    }
    return 0;

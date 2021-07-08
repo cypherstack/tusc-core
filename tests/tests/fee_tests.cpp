@@ -116,14 +116,14 @@ BOOST_AUTO_TEST_CASE(asset_claim_fees_test)
       const asset izzy_satoshi = asset(1, izzycoin_id);
       const asset jill_satoshi = asset(1, jillcoin_id);
 
-      // Izzycoin is worth 100 TUSC
+      // Izzycoin is worth 100 BTS
       price_feed feed;
       feed.settlement_price = price( _izzy(1), _core(100) );
       feed.maintenance_collateral_ratio = 175 * GRAPHENE_COLLATERAL_RATIO_DENOM / 100;
       feed.maximum_short_squeeze_ratio = 150 * GRAPHENE_COLLATERAL_RATIO_DENOM / 100;
       publish_feed( izzycoin_id(db), izzy, feed );
 
-      // Jillcoin is worth 30 TUSC
+      // Jillcoin is worth 30 BTS
       feed.settlement_price = price( _jill(1), _core(30) );
       feed.maintenance_collateral_ratio = 175 * GRAPHENE_COLLATERAL_RATIO_DENOM / 100;
       feed.maximum_short_squeeze_ratio = 150 * GRAPHENE_COLLATERAL_RATIO_DENOM / 100;
@@ -207,7 +207,7 @@ BOOST_AUTO_TEST_CASE(asset_claim_pool_test)
     {
         ACTORS((alice)(bob));
         // Alice and Bob create some user issued assets
-        // Alice deposits TUSC to the fee pool
+        // Alice deposits BTS to the fee pool
         // Alice claimes fee pool of her asset and can't claim pool of Bob's asset
 
         const share_type core_prec = asset::scaled_precision( asset_id_type()(db).precision );
@@ -274,9 +274,7 @@ BOOST_AUTO_TEST_CASE(asset_claim_pool_test)
 
         };
 
-        const asset_object& core_asset = asset_id_type()(db);
-
-        // deposit 100 TUSC to the fee pool of ALICEUSD asset
+        // deposit 100 BTS to the fee pool of ALICEUSD asset
         fund_fee_pool( alice_id(db), aliceusd_id(db), _core(100).amount );
 
         // New reference for core_asset after having produced blocks
@@ -285,7 +283,7 @@ BOOST_AUTO_TEST_CASE(asset_claim_pool_test)
         // can't claim pool because it is empty
         GRAPHENE_REQUIRE_THROW( claim_pool( alice_id, alicecoin_id, _core(1), core_asset_hf), fc::exception );
 
-        // deposit 300 TUSC to the fee pool of ALICECOIN asset
+        // deposit 300 BTS to the fee pool of ALICECOIN asset
         fund_fee_pool( alice_id(db), alicecoin_id(db), _core(300).amount );
 
         // Test amount of CORE in fee pools
@@ -301,7 +299,7 @@ BOOST_AUTO_TEST_CASE(asset_claim_pool_test)
         // can't pay fee in the same asset whose pool is being drained
         GRAPHENE_REQUIRE_THROW( claim_pool( alice_id, alicecoin_id, _core(200), alicecoin_id(db) ), fc::exception );
 
-        // can claim TUSC back from the fee pool
+        // can claim BTS back from the fee pool
         claim_pool( alice_id, alicecoin_id, _core(200), core_asset_hf );
         BOOST_CHECK( alicecoin_id(db).dynamic_asset_data_id(db).fee_pool == _core(100).amount );
 
@@ -494,25 +492,14 @@ BOOST_AUTO_TEST_CASE( cashback_test )
    {
       CustomRegisterActor(ann, life, life, 75);
       alife.vcb += reg_fee; alife.bal += -reg_fee;
-      anathan.ubal += pct( mp_pct, aann.ucb );
-      //anathan.ubal += pct( ch_pct, aann.ucb  );
-      anathan.ubal += pct( mp_pct, reg_fee );
-      //anathan.ubal += pct( ch_pct, reg_fee );
       CustomAudit();
 
       transfer(life_id, ann_id, asset(aann.b0));
       alife.vcb += xfer_fee; alife.bal += -xfer_fee -aann.b0; aann.bal += aann.b0;
-<<<<<<< HEAD
-=======
-      anathan.ubal += pct( mp_pct, xfer_fee );
       CustomAudit();
 
+      upgrade_to_annual_member(ann_id);
       aann.ucb += upg_an_fee; aann.bal += -upg_an_fee;
-<<<<<<< HEAD
-=======
-      anathan.ubal += pct( mp_pct, upg_an_fee );
-      //anathan.ubal += pct( ch_pct, upg_an_fee );
->>>>>>> f0457080... Charity fix. MP fix. Remove cheap names
 
       // audit distribution of fees from Ann
       alife.ubal += pct( P100-network_pct, aann.ucb );
@@ -524,40 +511,20 @@ BOOST_AUTO_TEST_CASE( cashback_test )
    BOOST_TEST_MESSAGE("Register dumy and stud");
    CustomRegisterActor(dumy, rog, life, 75);
    arog.vcb += reg_fee; arog.bal += -reg_fee;
-<<<<<<< HEAD
-=======
-   anathan.ubal += pct( mp_pct, reg_fee );
-   //anathan.ubal += pct( ch_pct, reg_fee );
->>>>>>> f0457080... Charity fix. MP fix. Remove cheap names
    CustomAudit();
 
    CustomRegisterActor(stud, rog, ann, 80);
    arog.vcb += reg_fee; arog.bal += -reg_fee;
-<<<<<<< HEAD
-=======
-   anathan.ubal += pct( mp_pct, reg_fee );
-   //anathan.ubal += pct( ch_pct, reg_fee );
->>>>>>> f0457080... Charity fix. MP fix. Remove cheap names
    CustomAudit();
 
    BOOST_TEST_MESSAGE("Upgrade stud to lifetime member");
 
    transfer(life_id, stud_id, asset(astud.b0));
    alife.vcb += xfer_fee; alife.bal += -astud.b0 -xfer_fee; astud.bal += astud.b0;
-<<<<<<< HEAD
-=======
-   anathan.ubal += pct( mp_pct, xfer_fee );
-   //anathan.ubal += pct( ch_pct, xfer_fee );
->>>>>>> f0457080... Charity fix. MP fix. Remove cheap names
    CustomAudit();
 
    upgrade_to_lifetime_member(stud_id);
    astud.ucb += upg_lt_fee; astud.bal -= upg_lt_fee;
-<<<<<<< HEAD
-=======
-   anathan.ubal += pct( mp_pct, upg_lt_fee );
-   //anathan.ubal += pct( ch_pct, upg_lt_fee );
->>>>>>> f0457080... Charity fix. MP fix. Remove cheap names
 
 /*
 network_cut:   20000
@@ -582,20 +549,10 @@ REG : net' ltm' ref'
 
    CustomRegisterActor(pleb, rog, stud, 95);
    arog.vcb += reg_fee; arog.bal += -reg_fee;
-<<<<<<< HEAD
-=======
-   anathan.ubal += pct( mp_pct, reg_fee );
-   //anathan.ubal += pct( ch_pct, reg_fee );
->>>>>>> f0457080... Charity fix. MP fix. Remove cheap names
    CustomAudit();
 
    CustomRegisterActor(scud, stud, ann, 80);
    astud.vcb += reg_fee; astud.bal += -reg_fee;
-<<<<<<< HEAD
-=======
-   anathan.ubal += pct( mp_pct, reg_fee );
-   //anathan.ubal += pct( ch_pct, reg_fee );
->>>>>>> f0457080... Charity fix. MP fix. Remove cheap names
    CustomAudit();
 
    generate_block();
@@ -645,38 +602,18 @@ REG : net' ltm' ref'
 
    transfer(stud_id, scud_id, asset(500000));
    astud.bal += -500000-xfer_fee; astud.vcb += xfer_fee; ascud.bal += 500000;
-<<<<<<< HEAD
-=======
-   anathan.ubal += pct( mp_pct, xfer_fee );
-   //anathan.ubal += pct( ch_pct, xfer_fee );
->>>>>>> f0457080... Charity fix. MP fix. Remove cheap names
    CustomAudit();
 
    transfer(scud_id, pleb_id, asset(400000));
    ascud.bal += -400000-xfer_fee; ascud.vcb += xfer_fee; apleb.bal += 400000;
-<<<<<<< HEAD
-=======
-   anathan.ubal += pct( mp_pct, xfer_fee );
-   //anathan.ubal += pct( ch_pct, xfer_fee );
->>>>>>> f0457080... Charity fix. MP fix. Remove cheap names
    CustomAudit();
 
    transfer(pleb_id, dumy_id, asset(300000));
    apleb.bal += -300000-xfer_fee; apleb.vcb += xfer_fee; adumy.bal += 300000;
-<<<<<<< HEAD
-=======
-   anathan.ubal += pct( mp_pct, xfer_fee );
-   //anathan.ubal += pct( ch_pct, xfer_fee );
->>>>>>> f0457080... Charity fix. MP fix. Remove cheap names
    CustomAudit();
 
    transfer(dumy_id, rog_id, asset(200000));
    adumy.bal += -200000-xfer_fee; adumy.vcb += xfer_fee; arog.bal += 200000;
-<<<<<<< HEAD
-=======
-   anathan.ubal += pct( mp_pct, xfer_fee );
-   //anathan.ubal += pct( ch_pct, xfer_fee );
->>>>>>> f0457080... Charity fix. MP fix. Remove cheap names
    CustomAudit();
 
    BOOST_TEST_MESSAGE("Waiting for maintenance time");
@@ -731,11 +668,6 @@ REG : net' ltm' ref'
    //ann's membership has expired, so scud's fee should go up to life instead.
    transfer(scud_id, pleb_id, asset(10));
    ascud.bal += -10-xfer_fee; ascud.vcb += xfer_fee; apleb.bal += 10;
-<<<<<<< HEAD
-=======
-   anathan.ubal += pct( mp_pct, xfer_fee );
-   //anathan.ubal += pct( ch_pct, xfer_fee );
->>>>>>> f0457080... Charity fix. MP fix. Remove cheap names
    CustomAudit();
 
    BOOST_TEST_MESSAGE("Waiting for maint interval");
