@@ -446,7 +446,7 @@ void_result asset_update_evaluator::do_evaluate(const asset_update_operation& o)
 
       if( hf_bsip_48_75_passed ) // TODO review after hard fork, probably can assert unconditionally
       {
-         FC_ASSERT( dyn_data.current_supply <= o.new_options.max_supply,
+         FC_ASSERT( dyn_data.current_supply <= o.new_options.initial_max_supply,
                     "Max supply should not be smaller than current supply" );
       }
    }
@@ -477,7 +477,7 @@ void_result asset_update_evaluator::do_evaluate(const asset_update_operation& o)
               "Incorrect issuer for asset! (${o.issuer} != ${a.issuer})",
               ("o.issuer", o.issuer)("a.issuer", a.issuer) );
 
-   FC_ASSERT( a.can_update_max_supply() || a.options.max_supply == o.new_options.max_supply,
+   FC_ASSERT( a.can_update_max_supply() || a.options.initial_max_supply == o.new_options.initial_max_supply,
               "Can not update max supply" );
 
    if( o.extensions.value.new_precision.valid() )

@@ -29,8 +29,8 @@
 #include <graphene/protocol/pts_address.hpp>
 #include <graphene/protocol/address.hpp>
 //#include <graphene/chain/pts_address.hpp>
-//#include <graphene/chain/protocol/types.hpp>
-//#include <graphene/chain/protocol/address.hpp>
+//#include <graphene/protocol/types.hpp>
+//#include <graphene/protocol/address.hpp>
 
 #include <iostream>
 #include <string>

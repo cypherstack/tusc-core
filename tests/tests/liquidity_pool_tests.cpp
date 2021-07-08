@@ -577,12 +577,12 @@ BOOST_AUTO_TEST_CASE( liquidity_pool_deposit_withdrawal_test )
       auop.new_options = lpa_id(db).options;
 
       // set max supply to a smaller number
-      auop.new_options.max_supply = 2000;
+      auop.new_options.initial_max_supply = 2000;
       trx.operations.clear();
       trx.operations.push_back( auop );
       PUSH_TX(db, trx, ~0);
 
-      BOOST_CHECK_EQUAL( lpa_id(db).options.max_supply.value, 2000 );
+      BOOST_CHECK_EQUAL( lpa_id(db).options.initial_max_supply.value, 2000 );
 
       // Unable to do initial deposit if to create more than the max supply
       BOOST_CHECK_THROW( deposit_to_liquidity_pool( sam_id, lp_id, asset( 2001, eur_id ), asset( 100, usd_id ) ),
@@ -647,12 +647,12 @@ BOOST_AUTO_TEST_CASE( liquidity_pool_deposit_withdrawal_test )
                          fc::exception );
 
       // set max supply to a bigger number
-      auop.new_options.max_supply = 3000;
+      auop.new_options.initial_max_supply = 3000;
       trx.operations.clear();
       trx.operations.push_back( auop );
       PUSH_TX(db, trx, ~0);
 
-      BOOST_CHECK_EQUAL( lpa_id(db).options.max_supply.value, 3000 );
+      BOOST_CHECK_EQUAL( lpa_id(db).options.initial_max_supply.value, 3000 );
 
       // Able to deposit more
       deposit_to_liquidity_pool( sam_id, lp_id, asset( 2, eur_id ), asset( 2, usd_id ) );

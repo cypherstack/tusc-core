@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include <graphene/chain/protocol/asset_ops.hpp>
+#include <graphene/protocol/asset_ops.hpp>
 
 #include <locale>
 

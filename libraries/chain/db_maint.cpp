@@ -74,7 +74,7 @@ vector<std::reference_wrapper<const typename Index::object_type>> database::sort
    return refs;
 }
 
-template<class Index>
+/*template<class Index>
 vector<std::reference_wrapper<const typename Index::object_type>> database::sort_standby_objects(size_t count) const
 {
    using ObjectType = typename Index::object_type;
@@ -109,7 +109,7 @@ vector<std::reference_wrapper<const typename Index::object_type>> database::sort
    std::copy(first, last, std::inserter(standby_wits, standby_wits.end()));
 
    return standby_wits;
-}
+}*/
 
 void database::handle_core_inflation()
 {
@@ -482,7 +482,7 @@ void database::initialize_budget_record( fc::time_point_sec now, budget_record& 
    rec.from_initial_reserve = core.reserved(*this);
    rec.from_accumulated_fees = core_dd.accumulated_fees;
    rec.from_unused_witness_budget = dpo.witness_budget;
-   rec.max_supply = core.options.max_supply;
+   rec.initial_max_supply = core.options.initial_max_supply;
 
    if(    (dpo.last_budget_time == fc::time_point_sec())
        || (now <= dpo.last_budget_time) )
@@ -1521,7 +1521,7 @@ void database::perform_chain_maintenance(const signed_block& next_block, const g
    if( (dgpo.next_maintenance_time <= HARDFORK_CORE_1270_TIME) && (next_maintenance_time > HARDFORK_CORE_1270_TIME) )
       to_update_and_match_call_orders_for_hf_1270 = true;
 
-   modify(dgpo, [next_maintenance_time](dynamic_global_property_object& d) {
+   modify(dgpo, [last_vote_tally_time, next_maintenance_time](dynamic_global_property_object& d) {
       d.next_maintenance_time = next_maintenance_time;
       d.last_vote_tally_time = last_vote_tally_time;
       d.accounts_registered_this_interval = 0;

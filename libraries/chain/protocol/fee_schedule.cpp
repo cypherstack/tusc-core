@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 #include <algorithm>
-#include <graphene/chain/protocol/fee_schedule.hpp>
+#include <graphene/protocol/fee_schedule.hpp>
 
 #define MAX_FEE_STABILIZATION_ITERATION 4
 

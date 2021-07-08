@@ -66,7 +66,7 @@ struct force_settle_database_fixture : database_fixture {
          creator.symbol = name;
          creator.precision = precision;
 
-         creator.common_options.max_supply = initial_max_supply;
+         creator.common_options.initial_max_supply = initial_max_supply;
          creator.common_options.market_fee_percent = market_fee_percent;
          if (issuer == GRAPHENE_WITNESS_ACCOUNT)
             flags |= witness_fed_asset;

@@ -63,7 +63,7 @@
 
 #include <graphene/app/api.hpp>
 #include <graphene/chain/asset_object.hpp>
-#include <graphene/chain/protocol/fee_schedule.hpp>
+#include <graphene/protocol/fee_schedule.hpp>
 #include <graphene/chain/hardfork.hpp>
 #include <graphene/utilities/git_revision.hpp>
 #include <graphene/utilities/key_conversion.hpp>
@@ -72,7 +72,7 @@
 #include <graphene/wallet/api_documentation.hpp>
 #include <graphene/wallet/reflect_util.hpp>
 #include <graphene/debug_witness/debug_api.hpp>
-#include <fc/smart_ref_impl.hpp>
+//#include <fc/smart_ref_impl.hpp>
 
 #ifndef WIN32
 # include <sys/types.h>
