@@ -59,8 +59,8 @@ BOOST_AUTO_TEST_CASE( valid_name_test )
    BOOST_CHECK( is_valid_name( "aa" ) );
    BOOST_CHECK( !is_valid_name( "aA" ) );
    BOOST_CHECK( is_valid_name( "a0" ) );
-   BOOST_CHECK( !is_valid_name( "a." ) );
-   BOOST_CHECK( !is_valid_name( "a-" ) );
+   BOOST_CHECK( is_valid_name( "a." ) );
+   BOOST_CHECK( is_valid_name( "a-" ) );
 
    BOOST_CHECK( is_valid_name( "aaa" ) );
    BOOST_CHECK( !is_valid_name( "aAa" ) );
@@ -71,7 +71,7 @@ BOOST_AUTO_TEST_CASE( valid_name_test )
    BOOST_CHECK( is_valid_name( "aa0" ) );
    BOOST_CHECK( !is_valid_name( "aA0" ) );
    BOOST_CHECK( is_valid_name( "a00" ) );
-   BOOST_CHECK( !is_valid_name( "a.0" ) );
+   BOOST_CHECK( is_valid_name( "a.0" ) );
    BOOST_CHECK( is_valid_name( "a-0" ) );
 
    BOOST_CHECK(  is_valid_name( "aaa-bbb-ccc" ) );
@@ -86,12 +86,12 @@ BOOST_AUTO_TEST_CASE( valid_name_test )
    BOOST_CHECK( !is_valid_name( ".aaa-bbb-ccc" ) );
    BOOST_CHECK( !is_valid_name( "/aaa-bbb-ccc" ) );
 
-   BOOST_CHECK( !is_valid_name( "aaa-bbb-ccc-" ) );
-   BOOST_CHECK( !is_valid_name( "aaa-bbb-ccc." ) );
-   BOOST_CHECK( !is_valid_name( "aaa-bbb-ccc.." ) );
+   BOOST_CHECK( is_valid_name( "aaa-bbb-ccc-" ) );
+   BOOST_CHECK( is_valid_name( "aaa-bbb-ccc." ) );
+   BOOST_CHECK( is_valid_name( "aaa-bbb-ccc.." ) );
    BOOST_CHECK( !is_valid_name( "aaa-bbb-ccc/" ) );
 
-   BOOST_CHECK( !is_valid_name( "aaa..bbb-ccc" ) );
+   BOOST_CHECK( is_valid_name( "aaa..bbb-ccc" ) );
    BOOST_CHECK( is_valid_name( "aaa.bbb-ccc" ) );
    BOOST_CHECK( is_valid_name( "aaa.bbb.ccc" ) );
 
