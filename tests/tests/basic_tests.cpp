@@ -224,8 +224,8 @@ BOOST_AUTO_TEST_CASE( price_test )
     BOOST_CHECK( less_than_max * ratio_type(7,1) == price(asset(less_than_max.base.amount*7/11),asset(1,asset_id_type(1))) );
     less_than_max.quote.amount = 92131419;
     BOOST_CHECK( less_than_max * ratio_type(7,1) == price(asset(less_than_max.base.amount*7/92131419),asset(1,asset_id_type(1))) );
-    less_than_max.quote.amount = 192131419;
-    BOOST_CHECK( less_than_max * ratio_type(7,1) == price(asset(less_than_max.base.amount.value*7>>3),asset(192131419>>3,asset_id_type(1))) );
+    less_than_max.quote.amount = 1000000000000000;
+    BOOST_CHECK( less_than_max * ratio_type(7,1) == price(asset(less_than_max.base.amount.value*7>>3),asset(1000000000000000>>3,asset_id_type(1))) );
 
     price more_than_min = price_min(0,1);
     more_than_min.base.amount = 11;

@@ -504,8 +504,19 @@ void database::initialize_budget_record( fc::time_point_sec now, budget_record& 
    // Similarly, we consider leftover witness_budget to be burned
    // at the BEGINNING of the maintenance interval.
    reserve += dpo.witness_budget;
-
-   rec.total_budget = reserve;
+   
+   fc::uint128_t budget_u128 = reserve.value;
+   budget_u128 *= uint64_t(dt);
+   budget_u128 *= GRAPHENE_CORE_ASSET_CYCLE_RATE;
+   //round up to the nearest satoshi -- this is necessary to ensure
+   //   there isn't an "untouchable" reserve, and we will eventually
+   //   be able to use the entire reserve
+   budget_u128 += ((uint64_t(1) << GRAPHENE_CORE_ASSET_CYCLE_RATE_BITS) - 1);
+   budget_u128 >>= GRAPHENE_CORE_ASSET_CYCLE_RATE_BITS;
+   if( budget_u128 < static_cast<fc::uint128_t>(reserve.value) )
+      rec.total_budget = share_type(static_cast<uint64_t>(budget_u128));
+   else
+      rec.total_budget = reserve;
 
    return;
 }
@@ -1521,6 +1532,18 @@ void database::perform_chain_maintenance(const signed_block& next_block, const g
    if( (dgpo.next_maintenance_time <= HARDFORK_CORE_1270_TIME) && (next_maintenance_time > HARDFORK_CORE_1270_TIME) )
       to_update_and_match_call_orders_for_hf_1270 = true;
 
+   // make sure current_supply is less than or equal to max_supply
+   if ( dgpo.next_maintenance_time <= HARDFORK_CORE_1465_TIME && next_maintenance_time > HARDFORK_CORE_1465_TIME )
+      process_hf_1465(*this);
+
+   // Fix supply issue
+   if ( dgpo.next_maintenance_time <= HARDFORK_CORE_2103_TIME && next_maintenance_time > HARDFORK_CORE_2103_TIME )
+      process_hf_2103(*this);
+
+   // Update tickets. Note: the new values will take effect only on the next maintenance interval
+   if ( dgpo.next_maintenance_time <= HARDFORK_CORE_2262_TIME && next_maintenance_time > HARDFORK_CORE_2262_TIME )
+      process_hf_2262(*this);
+      
    modify(dgpo, [last_vote_tally_time, next_maintenance_time](dynamic_global_property_object& d) {
       d.next_maintenance_time = next_maintenance_time;
       d.last_vote_tally_time = last_vote_tally_time;
