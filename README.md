@@ -46,7 +46,7 @@ We recommend building on Ubuntu 20.04 LTS (64-bit)
     git submodule update --init --recursive
     mkdir build
     cd build
-    cmake -DCMAKE_BUILD_TYPE=Release ..
+    cmake -DGRAPHENE_EGENESIS_JSON="../libraries/egenesis/tusc-upgrade.json" -DCMAKE_BUILD_TYPE=Release ..
     make
 
 **Upgrade Script:** (prepend to the Build Script above if you built a prior release):
@@ -89,10 +89,7 @@ In order to run a full node with all the account history you need to remove `par
 
 | Default | Full | Minimal  | ElasticSearch
 | --- | --- | --- | ---
-<<<<<<< HEAD
-| 150G HDD, 16G RAM | 640G SSD, 64G RAM * | 120G HDD, 4G RAM | 1TB SSD, 32G RAM
-
-\* For this setup, allocate at least 500GB of SSD as swap.
+| 2 cpu, 8G HDD, 4G RAM | 2 cpu, 64G HDD, 8G RAM | 2 cpu, 8G HDD, 4G RAM | 2 cpu, 128G SSD, 16G RAM
 
 To use the command-line wallet or other wallets / clients with the node, the node need to be started with RPC connection enabled, which can be done by starting the node with the `--rpc-endpoint` parameter, E.G.
 
@@ -101,14 +98,10 @@ To use the command-line wallet or other wallets / clients with the node, the nod
 or configure it in the config file by editing `witness_node_data_dir/config.ini` as follows:
 
     rpc-endpoint = 127.0.0.1:8090
-=======
-| 2 cpu, 8G HDD, 4G RAM | 2 cpu, 64G HDD, 8G RAM | 2 cpu, 8G HDD, 4G RAM | 2 cpu, 128G SSD, 16G RAM
->>>>>>> bd37cb02... Update suggested node reqs
 
 You can run the program with `--help` parameter to see more info:
 
     ./programs/witness_node/witness_node --help
-
 
 ### Run the command-line wallet software
 

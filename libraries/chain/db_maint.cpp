@@ -74,43 +74,6 @@ vector<std::reference_wrapper<const typename Index::object_type>> database::sort
    return refs;
 }
 
-/*template<class Index>
-vector<std::reference_wrapper<const typename Index::object_type>> database::sort_standby_objects(size_t count) const
-{
-   using ObjectType = typename Index::object_type;
-   const auto& all_objects = get_index_type<Index>().indices();
-   size_t active_wit_count = count;
-   size_t total_wit_count = 100;
-   size_t all_object_count = all_objects.size();
-   count = std::min(total_wit_count, all_object_count);
-   vector<std::reference_wrapper<const ObjectType>> refs;
-
-   if(all_objects.size() <= active_wit_count){
-      return refs;
-   }
-   
-   refs.reserve(all_objects.size());
-   std::transform(all_objects.begin(), all_objects.end(),
-                  std::back_inserter(refs),
-                  [](const ObjectType& o) { return std::cref(o); });
-   std::partial_sort(refs.begin(), refs.begin() + count, refs.end(),
-                   [this](const ObjectType& a, const ObjectType& b)->bool {
-      share_type oa_vote = _vote_tally_buffer[a.vote_id];
-      share_type ob_vote = _vote_tally_buffer[b.vote_id];
-      if( oa_vote != ob_vote )
-         return oa_vote > ob_vote;
-      return a.vote_id < b.vote_id;
-   });
-
-   auto first = refs.begin() + active_wit_count;
-   auto last = refs.begin() + count;
-   vector<std::reference_wrapper<const ObjectType>> standby_wits;
-   standby_wits.reserve(count - active_wit_count);
-   std::copy(first, last, std::inserter(standby_wits, standby_wits.end()));
-
-   return standby_wits;
-}*/
-
 void database::handle_core_inflation()
 {
    const global_property_object& gpo = get_global_properties();
@@ -124,26 +87,6 @@ void database::handle_core_inflation()
    }
 }
 
-/*void database::handle_marketing_fees()
-{
-   const global_property_object& gpo = get_global_properties();
-   if (gpo.marketing_partner_account_name != "" ) 
-   {
-      auto& acnt_indx = get_index_type<account_index>();
-      auto marketing_partner_itr = acnt_indx.indices().get<by_name>().find( gpo.marketing_partner_account_name );
-      if ( marketing_partner_itr != acnt_indx.indices().get<by_name>().end() )
-      {
-         // Found current marketing partner account.
-         // Now give the marketing partner all the accumulated fees for them and zero it out on the db
-         const asset_dynamic_data_object& core_dd = get_core_dynamic_data();
-         adjust_balance(marketing_partner_itr->id,  asset(core_dd.accumulated_fees_for_marketing_partner, asset_id_type()));
-         modify( core_dd, [](asset_dynamic_data_object& addo) {
-            addo.accumulated_fees_for_marketing_partner = 0;
-         });
-      }
-   }
-}
-*/
 template<class Type>
 void database::perform_account_maintenance(Type tally_helper)
 {
@@ -547,7 +490,6 @@ void database::process_budget()
       //
       assert( gpo.parameters.block_interval > 0 );
       uint64_t blocks_to_maint = (uint64_t(time_to_maint) + gpo.parameters.block_interval - 1) / gpo.parameters.block_interval;
-      // blocks_to_maint = number of blocks in previous maintenance cycle
       // blocks_to_maint > 0 because time_to_maint > 0,
       // which means numerator is at least equal to block_interval
       
@@ -1512,9 +1454,6 @@ void database::perform_chain_maintenance(const signed_block& next_block, const g
       }
    }
 
-   // Handle hard forks here
-   // TODO: remove BitShares specific hardforks.
-
    if( (dgpo.next_maintenance_time < HARDFORK_613_TIME) && (next_maintenance_time >= HARDFORK_613_TIME) )
       deprecate_annual_members(*this);
 
@@ -1543,7 +1482,7 @@ void database::perform_chain_maintenance(const signed_block& next_block, const g
    // Update tickets. Note: the new values will take effect only on the next maintenance interval
    if ( dgpo.next_maintenance_time <= HARDFORK_CORE_2262_TIME && next_maintenance_time > HARDFORK_CORE_2262_TIME )
       process_hf_2262(*this);
-      
+
    modify(dgpo, [last_vote_tally_time, next_maintenance_time](dynamic_global_property_object& d) {
       d.next_maintenance_time = next_maintenance_time;
       d.last_vote_tally_time = last_vote_tally_time;

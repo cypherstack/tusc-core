@@ -244,7 +244,6 @@ namespace graphene { namespace chain {
       /// The result will be used to check new debt positions and position updates.
       /// Calculation: ~settlement_price * initial_collateral_ratio / GRAPHENE_COLLATERAL_RATIO_DENOM
       price calculate_initial_collateralization()const;
-        // { return dynamic_data(db).current_max_supply - dynamic_data(db).current_supply; } flagbb
    };
 
    /**
@@ -414,8 +413,6 @@ namespace graphene { namespace chain {
 MAP_OBJECT_ID_TO_TYPE(graphene::chain::asset_object)
 MAP_OBJECT_ID_TO_TYPE(graphene::chain::asset_dynamic_data_object)
 MAP_OBJECT_ID_TO_TYPE(graphene::chain::asset_bitasset_data_object)
-//FC_REFLECT_DERIVED( graphene::chain::asset_dynamic_data_object, (graphene::db::object),
-//                   (current_supply)(current_max_supply)(confidential_supply)(accumulated_fees)(accumulated_fees_for_marketing_partner)(fee_pool) )
 
 FC_REFLECT_DERIVED( graphene::chain::price_feed_with_icr, (graphene::protocol::price_feed),
                     (initial_collateral_ratio) )
