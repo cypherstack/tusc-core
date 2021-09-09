@@ -242,6 +242,7 @@ object_id_type asset_create_evaluator::do_apply( const asset_create_operation& o
    const asset_dynamic_data_object& dyn_asset =
       d.create<asset_dynamic_data_object>( [hf_429,this]( asset_dynamic_data_object& a ) {
          a.current_supply = 0;
+         a.current_max_supply = GRAPHENE_INITIAL_MAX_SHARE_SUPPLY;
          a.fee_pool = core_fee_paid - (hf_429 ? 1 : 0);
       });
 
@@ -298,7 +299,7 @@ void_result asset_issue_evaluator::do_evaluate( const asset_issue_operation& o )
    FC_ASSERT( is_authorized_asset( d, *to_account, a ) );
 
    asset_dyn_data = &a.dynamic_asset_data_id(d);
-   FC_ASSERT( (asset_dyn_data->current_supply + o.asset_to_issue.amount) <= a.options.max_supply );
+   FC_ASSERT( (asset_dyn_data->current_supply + o.asset_to_issue.amount) <= asset_dyn_data->current_max_supply );
 
    return void_result();
 } FC_CAPTURE_AND_RETHROW( (o) ) }
@@ -445,7 +446,7 @@ void_result asset_update_evaluator::do_evaluate(const asset_update_operation& o)
 
       if( hf_bsip_48_75_passed ) // TODO review after hard fork, probably can assert unconditionally
       {
-         FC_ASSERT( dyn_data.current_supply <= o.new_options.max_supply,
+         FC_ASSERT( dyn_data.current_supply <= o.new_options.initial_max_supply,
                     "Max supply should not be smaller than current supply" );
       }
    }
@@ -476,7 +477,7 @@ void_result asset_update_evaluator::do_evaluate(const asset_update_operation& o)
               "Incorrect issuer for asset! (${o.issuer} != ${a.issuer})",
               ("o.issuer", o.issuer)("a.issuer", a.issuer) );
 
-   FC_ASSERT( a.can_update_max_supply() || a.options.max_supply == o.new_options.max_supply,
+   FC_ASSERT( a.can_update_max_supply() || a.options.initial_max_supply == o.new_options.initial_max_supply,
               "Can not update max supply" );
 
    if( o.extensions.value.new_precision.valid() )

@@ -316,7 +316,7 @@ struct database_fixture_base {
                                        uint16_t flags = charge_market_fee,
                                        uint16_t precision = 2,
                                        asset_id_type backing_asset = {},
-                                       share_type max_supply = GRAPHENE_MAX_SHARE_SUPPLY,
+                                       share_type initial_max_supply = GRAPHENE_INITIAL_MAX_SHARE_SUPPLY,
                                        optional<uint16_t> initial_cr = {},
                                        optional<uint16_t> margin_call_fee_ratio = {} );
    const asset_object& create_bitasset(const string& name,
@@ -325,7 +325,7 @@ struct database_fixture_base {
                                        uint16_t flags = charge_market_fee,
                                        uint16_t precision = 2,
                                        asset_id_type backing_asset = {},
-                                       share_type max_supply = GRAPHENE_MAX_SHARE_SUPPLY,
+                                       share_type initial_max_supply = GRAPHENE_INITIAL_MAX_SHARE_SUPPLY,
                                        optional<uint16_t> initial_cr = {},
                                        optional<uint16_t> margin_call_fee_ratio = {} );
    const asset_object& create_prediction_market(const string& name,
