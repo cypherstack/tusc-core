@@ -150,3 +150,8 @@ jobs:
         export CCACHE_DIR="$GITHUB_WORKSPACE/ccache"
         mkdir -p "$CCACHE_DIR"
         make -j 2 -C _build witness_node cli_wallet
+    - name: Upload binary
+      uses: actions/upload-artifact@v2
+      with:
+        name: cli_wallet_win64.exe
+        path: cli_wallet
