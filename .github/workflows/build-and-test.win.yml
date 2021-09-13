@@ -153,5 +153,5 @@ jobs:
     - name: Upload binary
       uses: actions/upload-artifact@v2
       with:
-        name: cli_wallet_win64.exe
-        path: cli_wallet
+        name: cli_wallet.exe
+        path: /home/runner/work/tusc-core/tusc-core/_build/cli_wallet.exe
