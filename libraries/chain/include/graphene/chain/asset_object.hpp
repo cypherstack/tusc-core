@@ -184,10 +184,9 @@ namespace graphene { namespace chain {
           */
          template<class DB>
          share_type reserved( const DB& db )const
-         { return options.initial_max_supply - dynamic_data(db).current_supply; }
+         { return dynamic_data(db).current_max_supply - dynamic_data(db).current_supply; }
 
-         /// @return true if asset can accumulate fees in the given denomination
-         template<class DB>
+	 template<class DB>
          bool can_accumulate_fee(const DB& db, const asset& fee) const {
             return (( fee.asset_id == get_id() ) ||
                     ( is_market_issued() && fee.asset_id == bitasset_data(db).options.short_backing_asset ));
