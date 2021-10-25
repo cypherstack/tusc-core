@@ -25,6 +25,7 @@
 #include <graphene/chain/types.hpp>
 #include <graphene/db/generic_index.hpp>
 #include <graphene/protocol/asset_ops.hpp>
+#include <graphene/chain/hardfork.hpp>
 
 #include <boost/multi_index/composite_key.hpp>
 
@@ -184,7 +185,15 @@ namespace graphene { namespace chain {
           */
          template<class DB>
          share_type reserved( const DB& db )const
-         { return dynamic_data(db).current_max_supply - dynamic_data(db).current_supply; }
+         { 
+            // const database& d = db();
+            const time_point_sec now = db.head_block_time();
+            if (now < HARDFORK_CORE_3000_TIME) {
+               return options.initial_max_supply - dynamic_data(db).current_supply;
+            } else {
+               return dynamic_data(db).current_max_supply - dynamic_data(db).current_supply;
+            }
+         }
 
 	 template<class DB>
          bool can_accumulate_fee(const DB& db, const asset& fee) const {
