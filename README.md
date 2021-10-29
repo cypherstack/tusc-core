@@ -46,7 +46,7 @@ We recommend building on Ubuntu 20.04 LTS (64-bit)
     git submodule update --init --recursive
     mkdir build
     cd build
-    cmake -DGRAPHENE_EGENESIS_JSON="../libraries/egenesis/tusc-upgrade.json" -DCMAKE_BUILD_TYPE=Release ..
+    cmake -DGRAPHENE_EGENESIS_JSON="$(pwd)/../libraries/egenesis/tusc-upgrade.json" -DCMAKE_BUILD_TYPE=Release ..
     make
 
 **Upgrade Script:** (prepend to the Build Script above if you built a prior release):
