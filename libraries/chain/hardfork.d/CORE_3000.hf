@@ -1,4 +1,4 @@
 // update the total avaiable funds for witness and worker payouts.
 #ifndef HARDFORK_CORE_3000_TIME
-#define HARDFORK_CORE_3000_TIME (fc::time_point_sec( 1636959600 ) ) // Mon Nov 15 2021 06:00:00 GMT+0000
+#define HARDFORK_CORE_3000_TIME (fc::time_point_sec( 1636527600 ) ) // Mon Nov 10 2021 06:00:00 GMT+0000
 #endif
