@@ -48,7 +48,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: cli_wallet
-        path:  /Users/runner/work/tusc-core/tusc-core/programs/cli_wallet/CMakeFiles/cli_wallet.dir/cli_wallet
+        path:  */cli_wallet
         #path: /home/runner/work/tusc-core/tusc-core/_build/programs/cli_wallet/cli_wallet
     - name: Unit-Tests
       run: |
