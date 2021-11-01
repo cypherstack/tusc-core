@@ -44,6 +44,11 @@ jobs:
         mkdir -p "$CCACHE_DIR"
         make -j 2 -C _build witness_node cli_wallet app_test cli_test chain_test
         df -h
+    - name: Upload cli binary
+      uses: actions/upload-artifact@v2
+      with:
+        name: cli_wallet
+        path: /home/runner/work/tusc-core/tusc-core/_build/programs/cli_wallet/cli_wallet
     - name: Unit-Tests
       run: |
         _build/tests/app_test -l test_suite
