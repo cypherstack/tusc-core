@@ -3,7 +3,7 @@ TUSC Core
 
 [Build Status](https://travis-ci.org/TUSCNetwork/tusc-core/branches):
 
-`master` |
+`main` |
  --- |
  [![](https://travis-ci.org/TUSCNetwork/tusc-core.svg?branch=master)](https://travis-ci.org/TUSCNetwork/tusc-core) 
 
@@ -42,7 +42,7 @@ We recommend building on Ubuntu 20.04 LTS (64-bit)
 
     git clone https://github.com/TUSCNetwork/tusc-core.git
     cd tusc-core
-    git checkout master # may substitute "master" with current release tag
+    git checkout main # may substitute "main" with current release tag
     git submodule update --init --recursive
     mkdir build
     cd build
@@ -52,7 +52,7 @@ We recommend building on Ubuntu 20.04 LTS (64-bit)
 **Upgrade Script:** (prepend to the Build Script above if you built a prior release):
 
     git remote set-url origin https://github.com/TUSCNetwork/tusc-core.git
-    git checkout master
+    git checkout main
     git remote set-head origin --auto
     git pull
     git submodule update --init --recursive # this command may fail
@@ -162,21 +162,14 @@ Use `gethelp <COMMAND>` to see more info about individual commands. E.G.
     >>> gethelp get_order_book
 
 The definition of all commands is available in the
-[wallet.hpp](https://github.com/bitshares/bitshares-core/blob/master/libraries/wallet/include/graphene/wallet/wallet.hpp) souce code file.
-Corresponding documentation can be found in the [Doxygen documentation](https://doxygen.bitshares.org/classgraphene_1_1wallet_1_1wallet__api.html).
+[wallet.hpp](https://github.com/tUSCNetwork/tusc-core/blob/main/libraries/wallet/include/graphene/wallet/wallet.hpp) souce code file.
 
 You can run the program with `--help` parameter to see more info:
 
     ./programs/cli_wallet/cli_wallet --help
 
-There is also some info in the [Wiki](https://github.com/bitshares/bitshares-core/wiki/CLI-Wallet-Cookbook).
-
 Use `help` to see all available wallet commands. Source definition and listing of all commands is available
-[here](https://github.com/TUSCNetwork/tusc-core/blob/master/libraries/wallet/include/graphene/wallet/wallet.hpp).
-
-Support
--------
-TBD
+[here](https://github.com/TUSCNetwork/tusc-core/blob/main/libraries/wallet/include/graphene/wallet/wallet.hpp).
 
 Using the API
 -------------
@@ -207,11 +200,8 @@ When using an HTTP client, the API ID can be replaced by the API name, E.G.
     $ curl --data '{"jsonrpc": "2.0", "method": "call", "params": ["database", "get_accounts", [["1.2.0"]]], "id": 1}' http://127.0.0.1:8090/
 
 The definition of all node API's is available in the source code files including
-[database_api.hpp](https://github.com/bitshares/bitshares-core/blob/master/libraries/app/include/graphene/app/database_api.hpp)
-and [api.hpp](https://github.com/bitshares/bitshares-core/blob/master/libraries/app/include/graphene/app/api.hpp).
-Corresponding documentation can be found in Doxygen:
-* [database API](https://doxygen.bitshares.org/classgraphene_1_1app_1_1database__api.html)
-* [other API's](https://doxygen.bitshares.org/namespacegraphene_1_1app.html)
+[database_api.hpp](https://github.com/TUSCNetwork/tusc-core/blob/main/libraries/app/include/graphene/app/database_api.hpp)
+and [api.hpp](https://github.com/TUSCNetwork/tusc-core/blob/main/libraries/app/include/graphene/app/api.hpp).
 
 
 ### Wallet API
@@ -265,7 +255,7 @@ necessary to use the node:
     }
 
 Passwords are stored in `base64` as salted `sha256` hashes.  A simple Python script,
-[`saltpass.py`](https://github.com/bitshares/bitshares-core/blob/master/programs/witness_node/saltpass.py)
+[`saltpass.py`](https://github.com/TUSCNetwork/tusc-core/blob/main/programs/witness_node/saltpass.py)
 is avaliable to obtain hash and salt values from a password.
 A single asterisk `"*"` may be specified as username or password hash to accept any value.
 
@@ -278,11 +268,6 @@ With the above configuration, here is an example of how to call `add_node` from 
 Note, the call to `network_node` is necessary to obtain the correct API identifier for the network API.  It is not guaranteed that the network API identifier will always be `2`.
 
 Since the `network_node` API requires login, it is only accessible over the websocket RPC.  
-
-Documentation
----
-TBD
-
 
 FAQ
 ---
