@@ -45,7 +45,6 @@ jobs:
         make -j 2 -C _build witness_node cli_wallet app_test cli_test chain_test
         df -h
     - name: Upload cli binary
-      run: pwd
       uses: actions/upload-artifact@v2
       with:
         name: cli_wallet
