@@ -8,7 +8,7 @@ jobs:
     name: Build and test in macOS
     strategy:
       matrix:
-        os: [macos-10.15, macos-11.0]
+        os: macos-11.0
     runs-on: ${{ matrix.os }}
     steps:
     - name: Install dependencies
@@ -45,10 +45,11 @@ jobs:
         make -j 2 -C _build witness_node cli_wallet app_test cli_test chain_test
         df -h
     - name: Upload cli binary
+      run: pwd
       uses: actions/upload-artifact@v2
       with:
         name: cli_wallet
-        path:  /*/cli_wallet
+        path:  '~/**/cli_wallet'
         #path: /home/runner/work/tusc-core/tusc-core/_build/programs/cli_wallet/cli_wallet
     - name: Unit-Tests
       run: |
