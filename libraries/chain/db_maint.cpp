@@ -504,13 +504,7 @@ void database::process_budget()
       //    voting on changes to block interval).
       //
       assert( gpo.parameters.block_interval > 0 );
-<<<<<<< HEAD
-      uint64_t blocks_to_maint = ( ( uint64_t(time_to_maint) + gpo.parameters.block_interval ) - 1 )
-                                 / gpo.parameters.block_interval;
-
-=======
       uint64_t blocks_to_maint = (uint64_t(time_to_maint) + gpo.parameters.block_interval - 1) / gpo.parameters.block_interval;
->>>>>>> 641693c2 (Renamed BitShares to TUSC, removed a ton of stuff from genesis.json)
       // blocks_to_maint > 0 because time_to_maint > 0,
       // which means numerator is at least equal to block_interval
       
@@ -1008,14 +1002,11 @@ void database::process_bitassets()
 }
 
 /****
-<<<<<<< HEAD
+
  * @brief a one-time data process to correct max_supply
  *
  * NOTE: while exceeding max_supply happened in mainnet, it seemed to have corrected
  * itself before HF 1465. But this method must remain to correct some assets in testnet
-=======
- * @brief a one-time data process to correct initial_max_supply
->>>>>>> 641693c2 (Renamed BitShares to TUSC, removed a ton of stuff from genesis.json)
  */
 void process_hf_1465( database& db )
 {
