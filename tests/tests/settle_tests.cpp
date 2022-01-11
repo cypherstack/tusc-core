@@ -2028,7 +2028,7 @@ BOOST_AUTO_TEST_CASE( settle_order_cancel_due_to_gs )
       acop.symbol = "SAMMPA";
       acop.precision = 2;
       acop.common_options.core_exchange_rate = price(asset(1,asset_id_type(1)),asset(1));
-      acop.common_options.max_supply = GRAPHENE_INITIAL_MAX_SHARE_SUPPLY;
+      acop.common_options.initial_max_supply = GRAPHENE_INITIAL_MAX_SHARE_SUPPLY;
       acop.common_options.market_fee_percent = 100; // 1%
       acop.common_options.flags = charge_market_fee;
       acop.common_options.issuer_permissions = ASSET_ISSUER_PERMISSION_ENABLE_BITS_MASK;
@@ -2154,7 +2154,7 @@ BOOST_AUTO_TEST_CASE( settle_order_cancel_due_to_no_feed )
       acop.symbol = "SAMMPA";
       acop.precision = 2;
       acop.common_options.core_exchange_rate = price(asset(1,asset_id_type(1)),asset(1));
-      acop.common_options.max_supply = GRAPHENE_INITIAL_MAX_SHARE_SUPPLY;
+      acop.common_options.initial_max_supply = GRAPHENE_INITIAL_MAX_SHARE_SUPPLY;
       acop.common_options.market_fee_percent = 100; // 1%
       acop.common_options.flags = charge_market_fee;
       acop.common_options.issuer_permissions = ASSET_ISSUER_PERMISSION_ENABLE_BITS_MASK;
@@ -2271,7 +2271,7 @@ BOOST_AUTO_TEST_CASE( settle_order_cancel_due_to_zero_amount )
       acop.symbol = "SAMMPA";
       acop.precision = 2;
       acop.common_options.core_exchange_rate = price(asset(1,asset_id_type(1)),asset(1));
-      acop.common_options.max_supply = GRAPHENE_INITIAL_MAX_SHARE_SUPPLY;
+      acop.common_options.initial_max_supply = GRAPHENE_INITIAL_MAX_SHARE_SUPPLY;
       acop.common_options.market_fee_percent = 100; // 1%
       acop.common_options.flags = charge_market_fee;
       acop.common_options.issuer_permissions = ASSET_ISSUER_PERMISSION_ENABLE_BITS_MASK;
@@ -2381,7 +2381,7 @@ BOOST_AUTO_TEST_CASE( settle_order_cancel_due_to_100_percent_offset )
       acop.symbol = "SAMMPA";
       acop.precision = 2;
       acop.common_options.core_exchange_rate = price(asset(1,asset_id_type(1)),asset(1));
-      acop.common_options.max_supply = GRAPHENE_INITIAL_MAX_SHARE_SUPPLY;
+      acop.common_options.initial_max_supply = GRAPHENE_INITIAL_MAX_SHARE_SUPPLY;
       acop.common_options.market_fee_percent = 100; // 1%
       acop.common_options.flags = charge_market_fee;
       acop.common_options.issuer_permissions = ASSET_ISSUER_PERMISSION_ENABLE_BITS_MASK;

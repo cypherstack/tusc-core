@@ -193,7 +193,7 @@ void database::init_genesis(const genesis_state_type& genesis_state)
    const asset_object& core_asset =
      create<asset_object>( [&genesis_state,&core_dyn_asset]( asset_object& a ) {
          a.symbol = GRAPHENE_SYMBOL;
-         a.options.max_supply = genesis_state.max_core_supply;
+         a.options.initial_max_supply = genesis_state.initial_max_core_supply;
          a.precision = GRAPHENE_BLOCKCHAIN_PRECISION_DIGITS;
          a.options.flags = 0;
          a.options.issuer_permissions = 0;
@@ -221,7 +221,7 @@ void database::init_genesis(const genesis_state_type& genesis_state)
          });
       const asset_object& asset_obj = create<asset_object>( [id,&dyn_asset]( asset_object& a ) {
          a.symbol = "SPECIAL" + std::to_string( id );
-         a.options.max_supply = 0;
+         a.options.initial_max_supply = 0;
          a.precision = GRAPHENE_BLOCKCHAIN_PRECISION_DIGITS;
          a.options.flags = 0;
          a.options.issuer_permissions = 0;
@@ -384,7 +384,7 @@ void database::init_genesis(const genesis_state_type& genesis_state)
          a.precision = asst.precision;
          string issuer_name = asst.issuer_name;
          a.issuer = get_account_id(issuer_name);
-         a.options.max_supply = asst.max_supply;
+         a.options.initial_max_supply = asst.initial_max_supply;
          a.options.flags = witness_fed_asset;
          a.options.issuer_permissions = ( asst.is_bitasset ? ASSET_ISSUER_PERMISSION_ENABLE_BITS_MASK
                                                            : DEFAULT_UIA_ASSET_ISSUER_PERMISSION );

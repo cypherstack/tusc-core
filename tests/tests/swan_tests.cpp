@@ -1096,7 +1096,7 @@ BOOST_AUTO_TEST_CASE( hf2281_asset_permissions_flags_test )
       acop.symbol = "SAMCOIN";
       acop.precision = 2;
       acop.common_options.core_exchange_rate = price(asset(1,asset_id_type(1)),asset(1));
-      acop.common_options.max_supply = GRAPHENE_INITIAL_MAX_SHARE_SUPPLY;
+      acop.common_options.initial_max_supply = GRAPHENE_INITIAL_MAX_SHARE_SUPPLY;
       acop.common_options.market_fee_percent = 100;
       acop.common_options.flags = charge_market_fee;
       acop.common_options.issuer_permissions = UIA_ASSET_ISSUER_PERMISSION_MASK | disable_collateral_bidding;
