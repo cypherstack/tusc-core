@@ -119,7 +119,7 @@ namespace graphene { namespace protocol {
 
          bool shrinked = false;
          bool using_max = false;
-         static const int128_t max( GRAPHENE_INITIAL_MAX_SHARE_SUPPLY );
+         static const uint128_t max( GRAPHENE_INITIAL_MAX_SHARE_SUPPLY );
          while( cp.numerator() > max || cp.denominator() > max )
          {
             if( 1 == cp.numerator() )
@@ -215,7 +215,7 @@ namespace graphene { namespace protocol {
          auto cp = swan * ratio;
 
          while( cp.numerator() > GRAPHENE_INITIAL_MAX_SHARE_SUPPLY || cp.denominator() > GRAPHENE_INITIAL_MAX_SHARE_SUPPLY )
-            cp = boost::rational<int128_t>( (cp.numerator() >> 1)+1, (cp.denominator() >> 1)+1 );
+            cp = boost::rational<uint128_t>( (cp.numerator() >> 1)+1, (cp.denominator() >> 1)+1 );
 
          return  (  asset( static_cast<int64_t>(cp.denominator()), collateral.asset_id )
                   / asset( static_cast<int64_t>(cp.numerator()), debt.asset_id ) );
@@ -282,7 +282,7 @@ namespace graphene { namespace protocol {
          auto cp = sp * ratio;
 
          while( cp.numerator() > GRAPHENE_INITIAL_MAX_SHARE_SUPPLY || cp.denominator() > GRAPHENE_INITIAL_MAX_SHARE_SUPPLY )
-            cp = boost::rational<int128_t>( (cp.numerator() >> 1)+(cp.numerator()&10),
+            cp = boost::rational<uint128_t>( (cp.numerator() >> 1)+(cp.numerator()&10),
                                             (cp.denominator() >> 1)+(cp.denominator()&10) );
 
          return (  asset( static_cast<int64_t>(cp.numerator()), settlement_price.base.asset_id )
